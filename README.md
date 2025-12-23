@@ -3,6 +3,18 @@
     <meta charset="UTF-8">
     <title>Lusther 3D - Plataforma</title>
     <style>
+
+/* Esconde o cabeçalho automático do GitHub Pages */
+body > header, .ui-header, h1:first-of-type {
+    display: none !important;
+}
+
+/* Se o texto "Multiversy" estiver vindo de um <h1> que o GitHub injeta: */
+header h1 { display: none; }
+
+
+
+        
         body {
             background: linear-gradient(45deg, #4f4f4f, #ffd700, #000000, #ffffff, #c0c0c0, #ff8c00);
             background-size: 400% 400%;
