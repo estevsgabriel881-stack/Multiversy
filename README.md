@@ -1,3 +1,4 @@
+
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -14,8 +15,11 @@ header h1 { display: none; }
 
 
 
-        
-        body {
+
+
+
+
+body {
             background: linear-gradient(45deg, #4f4f4f, #ffd700, #000000, #ffffff, #c0c0c0, #ff8c00);
             background-size: 400% 400%;
             background-attachment: fixed;
@@ -126,6 +130,17 @@ header h1 { display: none; }
         .btn-perigo { background: #ff4757; margin-top: 20px; font-size: 0.8em; width: auto; padding: 8px 15px; }
         
         .info-card { background: rgba(255, 215, 0, 0.1); border: 1px solid gold; padding: 20px; border-radius: 10px; margin-top: 20px; }
+
+        /* Estilo específico para o Iframe do Gráfico */
+        .container-grafico {
+            width: 100%;
+            height: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid gold;
+            margin-top: 15px;
+            background: #000;
+        }
     </style>
 </head>
 <body>
@@ -172,11 +187,25 @@ header h1 { display: none; }
     </div>
 
     <div id="exchange" class="secao">
-        <div class="header-perfil">
-            <h2>💱 Exchange</h2>
-            <div class="info-card">
-                <p>Central de trocas Lusther 3D. Aqui você encontrará informações sobre negociações oficiais.</p>
-                <p><i>Sistema de Exchange indisponível no momento.</i></p>
+        <div class="header-perfil" style="max-width: 95%; width: 1100px;">
+            <h2>💱 Exchange Lusther 3D</h2>
+            <p style="font-size: 0.8em; color: gold; margin-bottom: 10px;">Token: 0x1132d4835542334f95f9aa48247ad9cc37b286d7 (Polygon)</p>
+            
+            <div class="container-grafico">
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    id="geckoterminal-embed" 
+                    title="GeckoTerminal Embed" 
+                    src="https://www.geckoterminal.com/es/polygon_pos/pools/0x0de9bb162ce01f953647c236fff94a9ed492c341?embed=1&info=0&swaps=1" 
+                    frameborder="0" 
+                    allow="clipboard-write" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            
+            <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+                <button onclick="window.open('https://www.geckoterminal.com/es/polygon_pos/pools/0x0de9bb162ce01f953647c236fff94a9ed492c341', '_blank')" style="width: auto; background: #3498db; padding: 10px 20px;">Ver no GeckoTerminal ↗</button>
             </div>
         </div>
     </div>
@@ -249,10 +278,8 @@ header h1 { display: none; }
             if(idSecao === 'quadrinhos') carregarFeed('feed-quadrinhos', 'quadrinhos');
             if(idSecao === 'livros') carregarFeed('feed-livros', 'livros');
             if(idSecao === 'impressao') carregarFeed('feed-impressao', 'impressao');
-            // Multiversy e Exchange não chamam carregarFeed pois não possuem mural
         }
 
-        // LOGIN E CADASTRO (LÓGICA ORIGINAL)
         function alternarTela(t) { 
             document.getElementById('area-login').style.display = t === 'login' ? 'block' : 'none';
             document.getElementById('area-cadastro').style.display = t === 'cadastro' ? 'block' : 'none';
@@ -274,7 +301,6 @@ header h1 { display: none; }
         function loginSucesso(c) { logado = true; usuarioAtual = c.email; document.getElementById('menu-principal').style.display = 'block'; mostrar('home'); }
         function logout() { localStorage.removeItem('sessao_ativa'); location.reload(); }
 
-        // FEED E POSTS
         function carregarFeed(containerId, catFiltro) {
             const f = document.getElementById(containerId); f.innerHTML = ""; let posts = [];
             for (let i = 0; i < localStorage.length; i++) {
@@ -352,4 +378,3 @@ header h1 { display: none; }
     </script>
 </body>
 </html>
-
