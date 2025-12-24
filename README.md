@@ -29,6 +29,7 @@ header h1 { display: none; }
 
 
        
+        
         body > header, .ui-header, h1:first-of-type { display: none !important; }
         header h1 { display: none; }
 
@@ -144,7 +145,6 @@ header h1 { display: none; }
         
         .info-card { background: rgba(255, 215, 0, 0.1); border: 1px solid gold; padding: 20px; border-radius: 10px; margin-top: 20px; }
 
-        /* --- NOVOS ESTILOS PARA O CHAT --- */
         .btn-chat-flutuante {
             position: fixed;
             bottom: 20px;
@@ -154,7 +154,7 @@ header h1 { display: none; }
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            display: none; /* Só aparece logado */
+            display: none;
             align-items: center;
             justify-content: center;
             font-size: 28px;
@@ -274,7 +274,7 @@ header h1 { display: none; }
                 <div class="lista-contatos" id="chat-usuarios"></div>
                 <div class="janela-conversa">
                     <div id="chat-status" style="padding: 10px; background: rgba(0,0,0,0.3); border-bottom: 1px solid gold; font-size: 0.8em; display:flex; justify-content:space-between">
-                        <span id="txt-status">Selecione uma conversa</span>
+                        <span id="txt-status">Selecione uma conversa (Somente amigos mútuos)</span>
                         <div id="acoes-chat" style="display:none">
                             <button id="btn-del-gp" onclick="deletarGrupo()" style="background:red; width:auto; padding:2px 8px; font-size:10px; display:none">EXCLUIR GRUPO</button>
                             <button onclick="bloquearContato()" style="background:#444; width:auto; padding:2px 8px; font-size:10px">BLOQUEAR</button>
@@ -341,7 +341,7 @@ header h1 { display: none; }
         let logado = false;
         let usuarioAtual = null;
         let contatoAtivo = null;
-        let chatTipo = ''; // 'privado' ou 'grupo'
+        let chatTipo = '';
 
         window.onload = () => {
             const salvo = localStorage.getItem('sessao_ativa');
@@ -391,12 +391,29 @@ header h1 { display: none; }
 
         function logout() { localStorage.removeItem('sessao_ativa'); location.reload(); }
 
-        // --- LÓGICA DO CHAT (GRUPOS E PRIVADO) ---
+        // LÓGICA DE SEGUIR E LIBERAR CHAT
+        function seguir(email) {
+            if(email === usuarioAtual) return;
+            let a = JSON.parse(localStorage.getItem(email)), eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            if(!eu.seguindo_lista) eu.seguindo_lista = [];
+            
+            if(!eu.seguindo_lista.includes(email)) {
+                eu.seguindo_lista.push(email); eu.seguindo++; a.seguidores++;
+            } else {
+                eu.seguindo_lista = eu.seguindo_lista.filter(e => e !== email); eu.seguindo--; a.seguidores--;
+            }
+            localStorage.setItem(email, JSON.stringify(a)); 
+            localStorage.setItem(usuarioAtual, JSON.stringify(eu));
+            
+            // Recarrega visualmente dependendo de onde está
+            const secaoAtiva = document.querySelector('.secao.ativa').id;
+            mostrar(secaoAtiva);
+        }
+
         function carregarListaChat() {
             const lista = document.getElementById('chat-usuarios');
             lista.innerHTML = "";
             let eu = JSON.parse(localStorage.getItem(usuarioAtual));
-            let sAtiva = localStorage.getItem('sessao_ativa');
 
             // Listar Grupos
             for (let i = 0; i < localStorage.length; i++) {
@@ -413,7 +430,7 @@ header h1 { display: none; }
                 }
             }
 
-            // Listar Privados (Seguidores Mútuos Online)
+            // Listar Privados (Trava de Seguidores Mútuos)
             for (let i = 0; i < localStorage.length; i++) {
                 const k = localStorage.key(i);
                 if (k === 'sessao_ativa' || !k.includes('@') || k === usuarioAtual || k.startsWith('gp_') || k.includes('_chat_')) continue;
@@ -423,10 +440,10 @@ header h1 { display: none; }
                 const eleMeSegue = alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual);
                 const bloqueado = (eu.bloqueados && eu.bloqueados.includes(k)) || (alvo.bloqueados && alvo.bloqueados.includes(usuarioAtual));
 
-                if (sAtiva === k && euSigo && eleMeSegue && !bloqueado) {
+                if (euSigo && eleMeSegue && !bloqueado) {
                     const d = document.createElement('div');
                     d.className = 'contato-item';
-                    d.innerHTML = `<strong>${alvo.nome}</strong>`;
+                    d.innerHTML = `<strong>${alvo.nome}</strong><br><small style="color:gold">Amigo</small>`;
                     d.onclick = () => abrirConversa(k, 'privado');
                     lista.appendChild(d);
                 }
@@ -540,7 +557,6 @@ header h1 { display: none; }
             }
         }
 
-        // --- RESTANTE DAS FUNÇÕES ORIGINAIS ---
         function carregarFeed(containerId, catFiltro) {
             const f = document.getElementById(containerId); if(!f) return; f.innerHTML = ""; let posts = [];
             for (let i = 0; i < localStorage.length; i++) {
@@ -563,12 +579,15 @@ header h1 { display: none; }
         }
 
         function criarCardPost(p, eMeu) {
+            const eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            const jaSigo = eu.seguindo_lista && eu.seguindo_lista.includes(p.autorEmail);
+
             const d = document.createElement('div'); d.className = 'post-card';
             d.innerHTML = `<span class="post-categoria">${p.categoria}</span><img src="${p.imagem}"><div class="post-info">
                 <p><strong>${p.autorNome}</strong> ${p.descricao}</p>
                 <div class="btn-group">
                     <button class="btn-interagir" onclick="interagir('${p.autorEmail}', ${p.id}, 'like')">❤️ ${p.likes}</button>
-                    <button class="btn-interagir" style="background:gold;color:black" onclick="seguir('${p.autorEmail}')">👤 Seguir</button>
+                    ${!eMeu ? `<button class="btn-interagir" style="background:${jaSigo?'#444':'gold'}; color:${jaSigo?'white':'black'}" onclick="seguir('${p.autorEmail}')">${jaSigo?'✅ Seguindo':'👤 Seguir'}</button>` : ''}
                     ${eMeu ? `<button class="btn-interagir" style="background:#e74c3c" onclick="removerPost(${p.id})">🗑️</button>` : ''}
                 </div>
             </div>`;
@@ -583,21 +602,6 @@ header h1 { display: none; }
                 c.posts.unshift({ id: Date.now(), imagem: e.target.result, descricao: document.getElementById('post-desc').value, categoria: cat, likes: 0, comentarios: [] });
                 localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil(); toggleElement('postar-foto');
             }; r.readAsDataURL(f);
-        }
-
-        function seguir(email) {
-            if(email === usuarioAtual) return;
-            let a = JSON.parse(localStorage.getItem(email)), eu = JSON.parse(localStorage.getItem(usuarioAtual));
-            if(!eu.seguindo_lista) eu.seguindo_lista = [];
-            if(!eu.seguindo_lista.includes(email)) {
-                eu.seguindo_lista.push(email); eu.seguindo++; a.seguidores++;
-                alert("Seguindo " + a.nome);
-            } else {
-                eu.seguindo_lista = eu.seguindo_lista.filter(e => e !== email); eu.seguindo--; a.seguidores--;
-                alert("Deixou de seguir.");
-            }
-            localStorage.setItem(email, JSON.stringify(a)); localStorage.setItem(usuarioAtual, JSON.stringify(eu));
-            carregarPerfil();
         }
 
         function salvarPerfil() {
@@ -624,3 +628,7 @@ header h1 { display: none; }
     </script>
 </body>
 </html>
+
+
+            
+             
