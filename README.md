@@ -1,4 +1,3 @@
-
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -15,11 +14,11 @@ header h1 { display: none; }
 
 
 
+       
+        body > header, .ui-header, h1:first-of-type { display: none !important; }
+        header h1 { display: none; }
 
-
-
-
-body {
+        body {
             background: linear-gradient(45deg, #4f4f4f, #ffd700, #000000, #ffffff, #c0c0c0, #ff8c00);
             background-size: 400% 400%;
             background-attachment: fixed;
@@ -131,7 +130,80 @@ body {
         
         .info-card { background: rgba(255, 215, 0, 0.1); border: 1px solid gold; padding: 20px; border-radius: 10px; margin-top: 20px; }
 
-        /* Estilo específico para o Iframe do Gráfico */
+        /* --- NOVOS ESTILOS PARA O CHAT --- */
+        .btn-chat-flutuante {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: gold;
+            color: black;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: none; /* Só aparece logado */
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 2000;
+            border: 2px solid #000;
+            transition: 0.3s;
+        }
+        .btn-chat-flutuante:hover { transform: scale(1.1); background: white; }
+
+        .chat-container {
+            display: flex;
+            height: 60vh;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid gold;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .lista-contatos {
+            width: 30%;
+            border-right: 1px solid #444;
+            overflow-y: auto;
+            text-align: left;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .contato-item {
+            padding: 12px;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+        }
+        .contato-item:hover { background: rgba(255, 215, 0, 0.2); }
+
+        .janela-conversa {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0,0,0,0.5);
+        }
+
+        #mensagens-corpo {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .msg-balao {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            font-size: 0.9em;
+            word-wrap: break-word;
+        }
+        .msg-enviada { align-self: flex-end; background: #790fcf; color: white; }
+        .msg-recebida { align-self: flex-start; background: #333; color: white; border: 1px solid #555; }
+
         .container-grafico {
             width: 100%;
             height: 600px;
@@ -156,6 +228,8 @@ body {
         <a onclick="logout()" style="color: #ff4757;">🚪 Sair</a>
     </nav>
 
+    <button id="btn-chat" class="btn-chat-flutuante" onclick="mostrar('chat')">💬</button>
+
     <div id="login" class="secao ativa">
         <div class="header-perfil" style="max-width: 400px; margin: 60px auto;">
             <div id="area-login">
@@ -176,40 +250,51 @@ body {
         </div>
     </div>
 
-    <div id="multiversy" class="secao">
-        <div class="header-perfil">
-            <h2>🌌 Multiversy</h2>
-            <div class="info-card">
-                <p>Bem-vindo ao Multiversy. Esta é uma área exclusiva para exploração de conteúdos especiais.</p>
-                <p><i>Conteúdo em desenvolvimento...</i></p>
+    <div id="chat" class="secao">
+        <div class="header-perfil" style="max-width: 1000px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                <h2>💬 Mensagens</h2>
+                <button onclick="abrirModalGrupo()" style="width:auto; padding:5px 15px; background:gold; color:black">+ NOVO GRUPO</button>
+            </div>
+            <div class="chat-container">
+                <div class="lista-contatos" id="chat-usuarios"></div>
+                <div class="janela-conversa">
+                    <div id="chat-status" style="padding: 10px; background: rgba(0,0,0,0.3); border-bottom: 1px solid gold; font-size: 0.8em; display:flex; justify-content:space-between">
+                        <span id="txt-status">Selecione uma conversa</span>
+                        <div id="acoes-chat" style="display:none">
+                            <button id="btn-del-gp" onclick="deletarGrupo()" style="background:red; width:auto; padding:2px 8px; font-size:10px; display:none">EXCLUIR GRUPO</button>
+                            <button onclick="bloquearContato()" style="background:#444; width:auto; padding:2px 8px; font-size:10px">BLOQUEAR</button>
+                        </div>
+                    </div>
+                    <div id="mensagens-corpo"></div>
+                    <div id="chat-controles" style="display:none; padding: 10px; background: rgba(0,0,0,0.4);">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="msg-input" placeholder="Sua mensagem..." style="margin:0;">
+                            <button onclick="enviarMensagem()" style="width: 80px;">Enviar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <div id="modal-grupo" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#1a1a1a; padding:20px; border:2px solid gold; border-radius:10px; z-index:3000; width:300px; text-align:center">
+        <h3>Novo Grupo</h3>
+        <input type="text" id="nome-grupo-novo" placeholder="Nome do Grupo">
+        <div id="lista-membros-gp" style="text-align:left; max-height:150px; overflow-y:auto; margin:10px 0; font-size:12px"></div>
+        <button onclick="confirmarGrupo()">CRIAR</button>
+        <button onclick="toggleElement('modal-grupo')" style="background:#444; margin-top:5px">CANCELAR</button>
+    </div>
+
+    <div id="multiversy" class="secao"><div class="header-perfil"><h2>🌌 Multiversy</h2><div class="info-card"><p>Conteúdo em desenvolvimento...</p></div></div></div>
     <div id="exchange" class="secao">
         <div class="header-perfil" style="max-width: 95%; width: 1100px;">
             <h2>💱 Exchange Lusther 3D</h2>
-            <p style="font-size: 0.8em; color: gold; margin-bottom: 10px;">Token: 0x1132d4835542334f95f9aa48247ad9cc37b286d7 (Polygon)</p>
-            
             <div class="container-grafico">
-                <iframe 
-                    width="100%" 
-                    height="100%" 
-                    id="geckoterminal-embed" 
-                    title="GeckoTerminal Embed" 
-                    src="https://www.geckoterminal.com/es/polygon_pos/pools/0x0de9bb162ce01f953647c236fff94a9ed492c341?embed=1&info=0&swaps=1" 
-                    frameborder="0" 
-                    allow="clipboard-write" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-            
-            <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-                <button onclick="window.open('https://www.geckoterminal.com/es/polygon_pos/pools/0x0de9bb162ce01f953647c236fff94a9ed492c341', '_blank')" style="width: auto; background: #3498db; padding: 10px 20px;">Ver no GeckoTerminal ↗</button>
+                <iframe width="100%" height="100%" src="https://www.geckoterminal.com/es/polygon_pos/pools/0x0de9bb162ce01f953647c236fff94a9ed492c341?embed=1&info=0&swaps=1" frameborder="0"></iframe>
             </div>
         </div>
     </div>
-
     <div id="home" class="secao"><div class="header-perfil"><h1>Mural da Comunidade</h1><div id="feed-global" class="galeria-fotos"></div></div></div>
     <div id="quadrinhos" class="secao"><div class="header-perfil"><h2>📚 Quadrinhos</h2><div id="feed-quadrinhos" class="galeria-fotos"></div></div></div>
     <div id="livros" class="secao"><div class="header-perfil"><h2>📖 Livros</h2><div id="feed-livros" class="galeria-fotos"></div></div></div>
@@ -218,47 +303,31 @@ body {
     <div id="perfil" class="secao">
         <div class="header-perfil">
             <img id="display-foto" src="https://via.placeholder.com/150" class="foto-perfil">
-            <h2 id="display-nome">Carregando...</h2>
+            <h2 id="display-nome">...</h2>
             <p id="display-bio">...</p>
             <div class="stats">
                 <div><span id="num-seguidores">0</span><br>Seguidores</div>
                 <div><span id="num-seguindo">0</span><br>Seguindo</div>
             </div>
             <div style="display: flex; gap: 10px; justify-content: center;">
-                <button onclick="toggleElement('edit-perfil')" style="width: auto; background: #555;">⚙️ Editar Perfil</button>
-                <button onclick="toggleElement('postar-foto')" style="width: auto; background: gold; color: black;">📸 Postar Algo</button>
+                <button onclick="toggleElement('edit-perfil')" style="width: auto; background: #555;">⚙️ Editar</button>
+                <button onclick="toggleElement('postar-foto')" style="width: auto; background: gold; color: black;">📸 Postar</button>
             </div>
-
-            <div id="edit-perfil" style="display:none; margin-top: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px;">
-                <input type="file" id="input-foto" accept="image/*">
-                <textarea id="input-bio" placeholder="Sua nova bio..."></textarea>
-                <button onclick="salvarPerfil()" style="background: #2ecc71;">Atualizar</button>
+            <div id="edit-perfil" style="display:none; margin-top:20px;"><input type="file" id="input-foto"><textarea id="input-bio"></textarea><button onclick="salvarPerfil()">Salvar</button></div>
+            <div id="postar-foto" style="display:none; margin-top:20px;">
+                <select id="post-cat"><option value="mural">Mural</option><option value="quadrinhos">Quadrinhos</option><option value="livros">Livros</option><option value="impressao">Impressão 3D</option></select>
+                <input type="file" id="input-post"><input type="text" id="post-desc" placeholder="Descrição"><button onclick="postarFoto()">Publicar</button>
             </div>
-
-            <div id="postar-foto" style="display:none; margin-top: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; text-align: left;">
-                <label>Categoria:</label>
-                <select id="post-cat">
-                    <option value="mural">Mural Geral</option>
-                    <option value="quadrinhos">Quadrinhos</option>
-                    <option value="livros">Livros</option>
-                    <option value="impressao">Impressão 3D</option>
-                </select>
-                <input type="file" id="input-post" accept="image/*">
-                <input type="text" id="post-desc" placeholder="Descrição...">
-                <input type="text" id="post-tags" placeholder="Hashtags...">
-                <button onclick="postarFoto()" style="background: #3498db;">Publicar</button>
-            </div>
-
-            <hr style="margin: 30px 0; border: 0; border-top: 1px solid gold;">
-            <h3>Minhas Postagens</h3>
             <div class="galeria-fotos" id="minha-galeria"></div>
-            <button onclick="deletarConta()" class="btn-perigo">🗑️ Excluir Minha Conta</button>
+            <button onclick="deletarConta()" class="btn-perigo">🗑️ Excluir Conta</button>
         </div>
     </div>
 
     <script>
         let logado = false;
         let usuarioAtual = null;
+        let contatoAtivo = null;
+        let chatTipo = ''; // 'privado' ou 'grupo'
 
         window.onload = () => {
             const salvo = localStorage.getItem('sessao_ativa');
@@ -275,9 +344,9 @@ body {
             
             if(idSecao === 'perfil') carregarPerfil();
             if(idSecao === 'home') carregarFeed('feed-global', 'todas');
-            if(idSecao === 'quadrinhos') carregarFeed('feed-quadrinhos', 'quadrinhos');
-            if(idSecao === 'livros') carregarFeed('feed-livros', 'livros');
-            if(idSecao === 'impressao') carregarFeed('feed-impressao', 'impressao');
+            if(idSecao === 'chat') carregarListaChat();
+            
+            if(['quadrinhos','livros','impressao'].includes(idSecao)) carregarFeed('feed-'+idSecao, idSecao);
         }
 
         function alternarTela(t) { 
@@ -289,7 +358,7 @@ body {
             const n = document.getElementById('cad-nome').value, e = document.getElementById('cad-email').value, s = document.getElementById('cad-senha').value;
             if(!n || !e || !s) return alert("Preencha tudo!");
             if(localStorage.getItem(e)) return alert("Já existe!");
-            localStorage.setItem(e, JSON.stringify({ nome: n, email: e, senha: s, bio: "", foto: "", posts: [], seguidores: 0, seguindo: 0 }));
+            localStorage.setItem(e, JSON.stringify({ nome: n, email: e, senha: s, bio: "", foto: "", posts: [], seguidores: 0, seguindo: 0, seguindo_lista: [], bloqueados: [] }));
             alert("Sucesso!"); alternarTela('login');
         }
 
@@ -298,13 +367,170 @@ body {
             if(c && c.senha === s) { localStorage.setItem('sessao_ativa', e); loginSucesso(c); } else alert("Erro!");
         }
 
-        function loginSucesso(c) { logado = true; usuarioAtual = c.email; document.getElementById('menu-principal').style.display = 'block'; mostrar('home'); }
+        function loginSucesso(c) { 
+            logado = true; 
+            usuarioAtual = c.email; 
+            document.getElementById('menu-principal').style.display = 'block'; 
+            document.getElementById('btn-chat').style.display = 'flex';
+            mostrar('home'); 
+        }
+
         function logout() { localStorage.removeItem('sessao_ativa'); location.reload(); }
 
-        function carregarFeed(containerId, catFiltro) {
-            const f = document.getElementById(containerId); f.innerHTML = ""; let posts = [];
+        // --- LÓGICA DO CHAT (GRUPOS E PRIVADO) ---
+        function carregarListaChat() {
+            const lista = document.getElementById('chat-usuarios');
+            lista.innerHTML = "";
+            let eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            let sAtiva = localStorage.getItem('sessao_ativa');
+
+            // Listar Grupos
             for (let i = 0; i < localStorage.length; i++) {
-                const k = localStorage.key(i); if (k === 'sessao_ativa' || !k.includes('@')) continue;
+                const k = localStorage.key(i);
+                if (k.startsWith('gp_')) {
+                    const gp = JSON.parse(localStorage.getItem(k));
+                    if (gp.membros.includes(usuarioAtual)) {
+                        const d = document.createElement('div');
+                        d.className = 'contato-item';
+                        d.innerHTML = `<span style="color:gold; font-size:10px">GRUPO</span><br><strong>${gp.nome}</strong>`;
+                        d.onclick = () => abrirConversa(k, 'grupo');
+                        lista.appendChild(d);
+                    }
+                }
+            }
+
+            // Listar Privados (Seguidores Mútuos Online)
+            for (let i = 0; i < localStorage.length; i++) {
+                const k = localStorage.key(i);
+                if (k === 'sessao_ativa' || !k.includes('@') || k === usuarioAtual || k.startsWith('gp_') || k.includes('_chat_')) continue;
+                
+                const alvo = JSON.parse(localStorage.getItem(k));
+                const euSigo = eu.seguindo_lista && eu.seguindo_lista.includes(k);
+                const eleMeSegue = alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual);
+                const bloqueado = (eu.bloqueados && eu.bloqueados.includes(k)) || (alvo.bloqueados && alvo.bloqueados.includes(usuarioAtual));
+
+                if (sAtiva === k && euSigo && eleMeSegue && !bloqueado) {
+                    const d = document.createElement('div');
+                    d.className = 'contato-item';
+                    d.innerHTML = `<strong>${alvo.nome}</strong>`;
+                    d.onclick = () => abrirConversa(k, 'privado');
+                    lista.appendChild(d);
+                }
+            }
+        }
+
+        function abrirConversa(id, tipo) {
+            contatoAtivo = id;
+            chatTipo = tipo;
+            const dados = JSON.parse(localStorage.getItem(id));
+            document.getElementById('txt-status').innerText = tipo === 'grupo' ? dados.nome : dados.nome;
+            document.getElementById('chat-controles').style.display = 'block';
+            document.getElementById('acoes-chat').style.display = 'flex';
+            document.getElementById('btn-del-gp').style.display = (tipo === 'grupo' && dados.admin === usuarioAtual) ? 'block' : 'none';
+            renderizarMensagens();
+        }
+
+        function enviarMensagem() {
+            const texto = document.getElementById('msg-input').value;
+            if(!texto || !contatoAtivo) return;
+            const eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            const msg = { r: usuarioAtual, n: eu.nome, t: texto, id: Date.now() };
+
+            if(chatTipo === 'grupo') {
+                let gp = JSON.parse(localStorage.getItem(contatoAtivo));
+                gp.mensagens.push(msg);
+                localStorage.setItem(contatoAtivo, JSON.stringify(gp));
+            } else {
+                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
+                let historico = JSON.parse(localStorage.getItem(chatKey)) || [];
+                historico.push(msg);
+                localStorage.setItem(chatKey, JSON.stringify(historico));
+            }
+            document.getElementById('msg-input').value = "";
+            renderizarMensagens();
+        }
+
+        function renderizarMensagens() {
+            const corpo = document.getElementById('mensagens-corpo');
+            corpo.innerHTML = "";
+            let historico = [];
+            if(chatTipo === 'grupo') {
+                historico = JSON.parse(localStorage.getItem(contatoAtivo)).mensagens;
+            } else {
+                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
+                historico = JSON.parse(localStorage.getItem(chatKey)) || [];
+            }
+
+            historico.forEach(m => {
+                const div = document.createElement('div');
+                div.className = `msg-balao ${m.r === usuarioAtual ? 'msg-enviada' : 'msg-recebida'}`;
+                div.title = "Clique para apagar";
+                div.onclick = () => apagarMensagem(m.id);
+                const autor = (chatTipo === 'grupo' && m.r !== usuarioAtual) ? `<small style="color:gold;display:block">${m.n}</small>` : '';
+                div.innerHTML = autor + m.t;
+                corpo.appendChild(div);
+            });
+            corpo.scrollTop = corpo.scrollHeight;
+        }
+
+        function apagarMensagem(msgId) {
+            if(!confirm("Apagar esta mensagem?")) return;
+            if(chatTipo === 'grupo') {
+                let gp = JSON.parse(localStorage.getItem(contatoAtivo));
+                gp.mensagens = gp.mensagens.filter(m => m.id !== msgId);
+                localStorage.setItem(contatoAtivo, JSON.stringify(gp));
+            } else {
+                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
+                let hist = JSON.parse(localStorage.getItem(chatKey));
+                localStorage.setItem(chatKey, JSON.stringify(hist.filter(m => m.id !== msgId)));
+            }
+            renderizarMensagens();
+        }
+
+        function abrirModalGrupo() {
+            toggleElement('modal-grupo');
+            const lista = document.getElementById('lista-membros-gp');
+            lista.innerHTML = "";
+            let eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            for (let i = 0; i < localStorage.length; i++) {
+                const k = localStorage.key(i);
+                if (k.includes('@') && k !== usuarioAtual && !k.startsWith('gp_')) {
+                    const alvo = JSON.parse(localStorage.getItem(k));
+                    if(eu.seguindo_lista && eu.seguindo_lista.includes(k) && alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual)) {
+                        lista.innerHTML += `<label><input type="checkbox" class="check-membro" value="${k}"> ${alvo.nome}</label><br>`;
+                    }
+                }
+            }
+        }
+
+        function confirmarGrupo() {
+            const nome = document.getElementById('nome-grupo-novo').value;
+            const selecionados = Array.from(document.querySelectorAll('.check-membro:checked')).map(cb => cb.value);
+            if(!nome || selecionados.length === 0) return alert("Erro nos dados!");
+            const idGp = 'gp_' + Date.now();
+            localStorage.setItem(idGp, JSON.stringify({ nome: nome, admin: usuarioAtual, membros: [usuarioAtual, ...selecionados], mensagens: [] }));
+            toggleElement('modal-grupo'); carregarListaChat();
+        }
+
+        function deletarGrupo() {
+            if(confirm("Excluir grupo?")) { localStorage.removeItem(contatoAtivo); contatoAtivo = null; carregarListaChat(); }
+        }
+
+        function bloquearContato() {
+            if(confirm("Bloquear contato?")) {
+                let eu = JSON.parse(localStorage.getItem(usuarioAtual));
+                if(!eu.bloqueados) eu.bloqueados = [];
+                eu.bloqueados.push(contatoAtivo);
+                localStorage.setItem(usuarioAtual, JSON.stringify(eu));
+                contatoAtivo = null; carregarListaChat();
+            }
+        }
+
+        // --- RESTANTE DAS FUNÇÕES ORIGINAIS ---
+        function carregarFeed(containerId, catFiltro) {
+            const f = document.getElementById(containerId); if(!f) return; f.innerHTML = ""; let posts = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const k = localStorage.key(i); if (k === 'sessao_ativa' || !k.includes('@') || k.includes('_chat_') || k.startsWith('gp_')) continue;
                 const c = JSON.parse(localStorage.getItem(k));
                 if (c.posts) c.posts.forEach(p => { if(catFiltro === 'todas' || p.categoria === catFiltro) posts.push({ ...p, autorNome: c.nome, autorEmail: c.email }); });
             }
@@ -316,8 +542,8 @@ body {
             document.getElementById('display-nome').innerText = c.nome;
             document.getElementById('display-bio').innerText = c.bio || "Sem bio.";
             document.getElementById('display-foto').src = c.foto || "https://via.placeholder.com/150";
-            document.getElementById('num-seguidores').innerText = c.seguidores;
-            document.getElementById('num-seguindo').innerText = c.seguindo;
+            document.getElementById('num-seguidores').innerText = c.seguidores || 0;
+            document.getElementById('num-seguindo').innerText = c.seguindo || 0;
             const g = document.getElementById('minha-galeria'); g.innerHTML = "";
             if(c.posts) c.posts.forEach(p => g.appendChild(criarCardPost({...p, autorNome: c.nome, autorEmail: c.email}, true)));
         }
@@ -325,14 +551,12 @@ body {
         function criarCardPost(p, eMeu) {
             const d = document.createElement('div'); d.className = 'post-card';
             d.innerHTML = `<span class="post-categoria">${p.categoria}</span><img src="${p.imagem}"><div class="post-info">
-                <p><strong>${p.autorNome}</strong> ${p.descricao}</p><p class="post-tags">${p.hashtags}</p>
+                <p><strong>${p.autorNome}</strong> ${p.descricao}</p>
                 <div class="btn-group">
                     <button class="btn-interagir" onclick="interagir('${p.autorEmail}', ${p.id}, 'like')">❤️ ${p.likes}</button>
-                    <button class="btn-interagir" style="background:#444" onclick="interagir('${p.autorEmail}', ${p.id}, 'comment')">💬 Comentar</button>
-                    ${!eMeu ? `<button class="btn-interagir" style="background:gold;color:black" onclick="seguir('${p.autorEmail}')">👤 Seguir</button>` : ''}
+                    <button class="btn-interagir" style="background:gold;color:black" onclick="seguir('${p.autorEmail}')">👤 Seguir</button>
                     ${eMeu ? `<button class="btn-interagir" style="background:#e74c3c" onclick="removerPost(${p.id})">🗑️</button>` : ''}
                 </div>
-                <div class="comentarios-area">${p.comentarios.map(c => `<div class="comentario-item"><strong>${c.autor}:</strong> ${c.texto}</div>`).join('')}</div>
             </div>`;
             return d;
         }
@@ -342,26 +566,28 @@ body {
             if(!f) return alert("Selecione!");
             const r = new FileReader(); r.onload = (e) => {
                 let c = JSON.parse(localStorage.getItem(usuarioAtual));
-                c.posts.unshift({ id: Date.now(), imagem: e.target.result, descricao: document.getElementById('post-desc').value, hashtags: document.getElementById('post-tags').value, categoria: cat, likes: 0, comentarios: [] });
-                localStorage.setItem(usuarioAtual, JSON.stringify(c)); alert("Postado!"); carregarPerfil(); toggleElement('postar-foto');
+                c.posts.unshift({ id: Date.now(), imagem: e.target.result, descricao: document.getElementById('post-desc').value, categoria: cat, likes: 0, comentarios: [] });
+                localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil(); toggleElement('postar-foto');
             }; r.readAsDataURL(f);
         }
 
-        function interagir(email, id, acao) {
-            let c = JSON.parse(localStorage.getItem(email)); const p = c.posts.find(x => x.id === id);
-            if(acao === 'like') p.likes++;
-            if(acao === 'comment') { const m = prompt("Comente:"); if(m) p.comentarios.push({ autor: JSON.parse(localStorage.getItem(usuarioAtual)).nome, texto: m }); }
-            localStorage.setItem(email, JSON.stringify(c)); mostrar(document.querySelector('.secao.ativa').id);
-        }
-
         function seguir(email) {
+            if(email === usuarioAtual) return;
             let a = JSON.parse(localStorage.getItem(email)), eu = JSON.parse(localStorage.getItem(usuarioAtual));
-            a.seguidores++; eu.seguindo++; localStorage.setItem(email, JSON.stringify(a)); localStorage.setItem(usuarioAtual, JSON.stringify(eu));
-            alert("Seguindo!"); carregarPerfil();
+            if(!eu.seguindo_lista) eu.seguindo_lista = [];
+            if(!eu.seguindo_lista.includes(email)) {
+                eu.seguindo_lista.push(email); eu.seguindo++; a.seguidores++;
+                alert("Seguindo " + a.nome);
+            } else {
+                eu.seguindo_lista = eu.seguindo_lista.filter(e => e !== email); eu.seguindo--; a.seguidores--;
+                alert("Deixou de seguir.");
+            }
+            localStorage.setItem(email, JSON.stringify(a)); localStorage.setItem(usuarioAtual, JSON.stringify(eu));
+            carregarPerfil();
         }
 
         function salvarPerfil() {
-            let c = JSON.parse(localStorage.getItem(usuarioAtual)); c.bio = document.getElementById('input-bio').value || c.bio;
+            let c = JSON.parse(localStorage.getItem(usuarioAtual)); c.bio = document.getElementById('input-bio').value;
             const f = document.getElementById('input-foto').files[0];
             if(f) { const r = new FileReader(); r.onload = (e) => { c.foto = e.target.result; localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil(); }; r.readAsDataURL(f); }
             else { localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil(); }
@@ -371,6 +597,12 @@ body {
         function removerPost(id) {
             let c = JSON.parse(localStorage.getItem(usuarioAtual)); c.posts = c.posts.filter(p => p.id !== id);
             localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil();
+        }
+
+        function interagir(email, id, acao) {
+            let c = JSON.parse(localStorage.getItem(email)); const p = c.posts.find(x => x.id === id);
+            if(acao === 'like') p.likes++;
+            localStorage.setItem(email, JSON.stringify(c)); carregarFeed('feed-global', 'todas');
         }
 
         function deletarConta() { if(confirm("Certeza?")) { localStorage.removeItem(usuarioAtual); logout(); } }
