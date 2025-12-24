@@ -302,20 +302,26 @@ header h1 { display: none; }
 
     
 
-    <div id="multiversy" style="width: 100%; height: 600px; position: relative; overflow: hidden; background: #000;">
-    
-    <div id="barra-legenda">
-        <div class="item-legenda">
-            <div class="quadrado cinza"></div>
-            <span>Escrever livro</span>
+    <div id="multiversy" style= "body { margin: 0; background: #000; overflow: hidden; }
+        
+        /* BARRA DE LEGENDA NO TOPO */
+        #barra-legenda {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            pointer-events: none; /* Deixa cliques passarem para o universo */
+        }"
         </div>
-        <div class="item-legenda">
-            <div class="quadrado azul"></div>
-            <span>Ler livro</span>
-        </div>
-    </div>
-
-    <div id="guia">Mova o mouse ou clique</div>
 
 </div>
 
