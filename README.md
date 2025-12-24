@@ -26,6 +26,15 @@ body > header, .ui-header, h1:first-of-type {
 /* Se o texto "Multiversy" estiver vindo de um <h1> que o GitHub injeta: */
 header h1 { display: none; }
 
+#multiversy {
+    position: relative; /* Essencial para prender a legenda aqui dentro */
+    width: 100%;
+    height: 600px; /* Ou a altura que você desejar */
+    background: #000;
+    overflow: hidden;
+}
+
+/* Copie os estilos da .item-legenda, .quadrado, etc., para o seu CSS principal */
 
 
 
@@ -299,156 +308,40 @@ header h1 { display: none; }
 
 
 
+<div id="multiversy">
+    <div id="barra-legenda">
+        <div class="item-legenda">
+            <div class="quadrado cinza"></div>
+            <span>Escrever livro</span>
+        </div>
+        <div class="item-legenda">
+            <div class="quadrado azul"></div>
+            <span>Ler livro</span>
+        </div>
+    </div>
+    
+    <div id="guia">Mova o mouse ou clique</div>
+    
+    </div>
 
     
-
-    <div id="multiversy" style= "body { margin: 0; background: #000; overflow: hidden; }
-        
-        /* BARRA DE LEGENDA NO TOPO */
-        #barra-legenda {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            pointer-events: none; /* Deixa cliques passarem para o universo */
-        }"
-        </div>
-
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
-    // Referência ao container
-    const container = document.getElementById('multiversy');
+    const container = document.getElementById('multiversy'); // Ele busca a sua div aqui
     
-    let cena, camera, renderizador, estrelas, planetas = [], nebulosas = [], buracosNegros = [], galaxias = [];
-    let starPositions;
-
-    // ... (Mantendo o blackHoleStarShader igual ao seu original) ...
-    const blackHoleStarShader = {
-        uniforms: {
-            'pointSize': { value: 2.0 },
-            'blackHolePos': { value: new THREE.Vector3(0, 0, 0) },
-            'blackHoleRadius': { value: 0.0 }
-        },
-        vertexShader: `
-            uniform float pointSize;
-            uniform vec3 blackHolePos;
-            uniform float blackHoleRadius;
-            void main() {
-                vec3 vPosition = position;
-                float distToBlackHole = distance(vPosition, blackHolePos);
-                if (distToBlackHole < blackHoleRadius && blackHoleRadius > 0.1) {
-                    vec3 dirToBlackHole = normalize(blackHolePos - vPosition);
-                    float pullFactor = 1.0 - pow(distToBlackHole / blackHoleRadius, 0.5); 
-                    vPosition += dirToBlackHole * pullFactor * blackHoleRadius * 0.1;
-                }
-                vec4 mvPosition = modelViewMatrix * vec4(vPosition, 1.0);
-                gl_PointSize = pointSize * (1000.0 / -mvPosition.z);
-                gl_Position = projectionMatrix * mvPosition;
-            }
-        `,
-        fragmentShader: `void main() { gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); }`
-    };
-
+    // ... todo o restante do código que passei anteriormente ...
+    
     function iniciar() {
-        cena = new THREE.Scene();
-        
-        // Ajuste de proporção para o container
-        const largura = container.clientWidth;
-        const altura = container.clientHeight;
-        
-        camera = new THREE.PerspectiveCamera(60, largura / altura, 1, 10000);
-        camera.position.z = 1000;
-
-        renderizador = new THREE.WebGLRenderer({ antialias: true });
-        renderizador.setSize(largura, altura);
-        
-        // ANEXAR AO CONTAINER EM VEZ DO BODY
-        container.appendChild(renderizador.domElement);
-
-        // ... (Mantendo luzes e estrelas igual) ...
-        const luzPrincipal = new THREE.DirectionalLight(0xffffff, 1.2);
-        luzPrincipal.position.set(5, 3, 5);
-        cena.add(luzPrincipal);
-        cena.add(new THREE.AmbientLight(0x333333));
-
-        const geometriaEstrelas = new THREE.BufferGeometry();
-        const pos = [];
-        for (let i = 0; i < 15000; i++) {
-            pos.push(THREE.MathUtils.randFloatSpread(4000), THREE.MathUtils.randFloatSpread(4000), THREE.MathUtils.randFloatSpread(4000));
-        }
-        starPositions = new THREE.Float32BufferAttribute(pos, 3);
-        geometriaEstrelas.setAttribute('position', starPositions);
-        
-        const materialEstrelas = new THREE.ShaderMaterial({
-            uniforms: blackHoleStarShader.uniforms,
-            vertexShader: blackHoleStarShader.vertexShader,
-            fragmentShader: blackHoleStarShader.fragmentShader,
-            transparent: true,
-            blending: THREE.AdditiveBlending
-        });
-        
-        estrelas = new THREE.Points(geometriaEstrelas, materialEstrelas);
-        cena.add(estrelas);
-
-        animar();
-        setInterval(criarBuracoNegro, 5 * 60 * 1000);
-        setInterval(criarGalaxia, 2 * 60 * 1000);
+        // ... 
+        renderizador.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderizador.domElement); // Ele coloca o universo dentro da div
+        // ...
     }
-
-    // AJUSTE NAS FUNÇÕES DE CRIAÇÃO (Coordenadas relativas ao container)
-    function criarObjetoPosicionado(x, y, tipo) {
-        const rect = container.getBoundingClientRect();
-        const mouseX = ((x - rect.left) / container.clientWidth) * 2 - 1;
-        const mouseY = -((y - rect.top) / container.clientHeight) * 2 + 1;
-
-        const vetor = new THREE.Vector3(mouseX, mouseY, 0.5);
-        vetor.unproject(camera);
-        const dir = vetor.sub(camera.position).normalize();
-        const pos = camera.position.clone().add(dir.multiplyScalar(-camera.position.z / dir.z));
-        return pos;
-    }
-
-    // Modifique o evento de clique para usar o container
-    container.addEventListener('mousedown', (e) => {
-        const pos = criarObjetoPosicionado(e.clientX, e.clientY);
-        
-        // Lógica de criação de Planeta simplificada para a nova posição
-        const geo = new THREE.SphereGeometry(Math.random() * 45 + 15, 64, 64);
-        const mat = new THREE.MeshPhongMaterial({ map: gerarTexturaPlaneta(), shininess: 5 });
-        const planeta = new THREE.Mesh(geo, mat);
-        planeta.position.set(pos.x, pos.y, pos.z - 500);
-        cena.add(planeta);
-        planetas.push({ mesh: planeta, velocidade: Math.random() * 4 + 2, rotacao: (Math.random() - 0.5) * 0.02 });
-
-        if(Math.random() > 0.3) {
-            // Lógica similar para nebulosa...
-        }
-    });
-
-    // ... (As funções auxiliares como gerarTexturaPlaneta e animar permanecem as mesmas) ...
-
-    window.addEventListener('resize', () => {
-        const largura = container.clientWidth;
-        const altura = container.clientHeight;
-        camera.aspect = largura / altura;
-        camera.updateProjectionMatrix();
-        renderizador.setSize(largura, altura);
-    });
-
-    iniciar();
+    // ...
 </script>
+
 
 
 
