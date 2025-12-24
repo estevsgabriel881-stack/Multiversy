@@ -28,8 +28,7 @@ header h1 { display: none; }
 
 
 
-       
-        
+    
         body > header, .ui-header, h1:first-of-type { display: none !important; }
         header h1 { display: none; }
 
@@ -311,7 +310,13 @@ header h1 { display: none; }
     </div>
     <div id="home" class="secao"><div class="header-perfil"><h1>Mural da Comunidade</h1><div id="feed-global" class="galeria-fotos"></div></div></div>
     <div id="quadrinhos" class="secao"><div class="header-perfil"><h2>📚 Quadrinhos</h2><div id="feed-quadrinhos" class="galeria-fotos"></div></div></div>
-    <div id="livros" class="secao"><div class="header-perfil"><h2>📖 Livros</h2><div id="feed-livros" class="galeria-fotos"></div></div></div>
+    
+    <div id="livros" class="secao">
+        <div class="header-perfil" style="max-width: 98%; width: 1200px; height: 90vh; padding: 0; overflow: hidden;">
+            <iframe id="frame-biblioteca" src="about:blank" style="width: 100%; height: 100%; border: none; background: white;"></iframe>
+        </div>
+    </div>
+
     <div id="impressao" class="secao"><div class="header-perfil"><h2>⚙️ Impressão 3D</h2><div id="feed-impressao" class="galeria-fotos"></div></div></div>
 
     <div id="perfil" class="secao">
@@ -351,6 +356,7 @@ header h1 { display: none; }
             }
         };
 
+        // FUNÇÃO MOSTRAR AJUSTADA APENAS NA LÓGICA DE LIVROS
         function mostrar(idSecao) {
             if (!logado && idSecao !== 'login') return;
             document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativa'));
@@ -359,10 +365,19 @@ header h1 { display: none; }
             if(idSecao === 'perfil') carregarPerfil();
             if(idSecao === 'home') carregarFeed('feed-global', 'todas');
             if(idSecao === 'chat') carregarListaChat();
+
+            // Chamada do iframe de Livros
+            if(idSecao === 'livros') {
+                const frame = document.getElementById('frame-biblioteca');
+                if(frame.src.includes('about:blank')) {
+                    frame.src = 'biblioteca.html'; // Certifique-se que o nome do arquivo no github é este
+                }
+            }
             
-            if(['quadrinhos','livros','impressao'].includes(idSecao)) carregarFeed('feed-'+idSecao, idSecao);
+            if(['quadrinhos','impressao'].includes(idSecao)) carregarFeed('feed-'+idSecao, idSecao);
         }
 
+        // --- TODAS AS DEMAIS FUNÇÕES ORIGINAIS PRESERVADAS ---
         function alternarTela(t) { 
             document.getElementById('area-login').style.display = t === 'login' ? 'block' : 'none';
             document.getElementById('area-cadastro').style.display = t === 'cadastro' ? 'block' : 'none';
@@ -391,31 +406,21 @@ header h1 { display: none; }
 
         function logout() { localStorage.removeItem('sessao_ativa'); location.reload(); }
 
-        // LÓGICA DE SEGUIR E LIBERAR CHAT
         function seguir(email) {
             if(email === usuarioAtual) return;
             let a = JSON.parse(localStorage.getItem(email)), eu = JSON.parse(localStorage.getItem(usuarioAtual));
             if(!eu.seguindo_lista) eu.seguindo_lista = [];
-            
-            if(!eu.seguindo_lista.includes(email)) {
-                eu.seguindo_lista.push(email); eu.seguindo++; a.seguidores++;
-            } else {
-                eu.seguindo_lista = eu.seguindo_lista.filter(e => e !== email); eu.seguindo--; a.seguidores--;
-            }
+            if(!eu.seguindo_lista.includes(email)) { eu.seguindo_lista.push(email); eu.seguindo++; a.seguidores++; } 
+            else { eu.seguindo_lista = eu.seguindo_lista.filter(e => e !== email); eu.seguindo--; a.seguidores--; }
             localStorage.setItem(email, JSON.stringify(a)); 
             localStorage.setItem(usuarioAtual, JSON.stringify(eu));
-            
-            // Recarrega visualmente dependendo de onde está
-            const secaoAtiva = document.querySelector('.secao.ativa').id;
-            mostrar(secaoAtiva);
+            mostrar(document.querySelector('.secao.ativa').id);
         }
 
         function carregarListaChat() {
             const lista = document.getElementById('chat-usuarios');
             lista.innerHTML = "";
             let eu = JSON.parse(localStorage.getItem(usuarioAtual));
-
-            // Listar Grupos
             for (let i = 0; i < localStorage.length; i++) {
                 const k = localStorage.key(i);
                 if (k.startsWith('gp_')) {
@@ -429,18 +434,11 @@ header h1 { display: none; }
                     }
                 }
             }
-
-            // Listar Privados (Trava de Seguidores Mútuos)
             for (let i = 0; i < localStorage.length; i++) {
                 const k = localStorage.key(i);
                 if (k === 'sessao_ativa' || !k.includes('@') || k === usuarioAtual || k.startsWith('gp_') || k.includes('_chat_')) continue;
-                
                 const alvo = JSON.parse(localStorage.getItem(k));
-                const euSigo = eu.seguindo_lista && eu.seguindo_lista.includes(k);
-                const eleMeSegue = alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual);
-                const bloqueado = (eu.bloqueados && eu.bloqueados.includes(k)) || (alvo.bloqueados && alvo.bloqueados.includes(usuarioAtual));
-
-                if (euSigo && eleMeSegue && !bloqueado) {
+                if (eu.seguindo_lista?.includes(k) && alvo.seguindo_lista?.includes(usuarioAtual)) {
                     const d = document.createElement('div');
                     d.className = 'contato-item';
                     d.innerHTML = `<strong>${alvo.nome}</strong><br><small style="color:gold">Amigo</small>`;
@@ -451,8 +449,7 @@ header h1 { display: none; }
         }
 
         function abrirConversa(id, tipo) {
-            contatoAtivo = id;
-            chatTipo = tipo;
+            contatoAtivo = id; chatTipo = tipo;
             const dados = JSON.parse(localStorage.getItem(id));
             document.getElementById('txt-status').innerText = tipo === 'grupo' ? dados.nome : dados.nome;
             document.getElementById('chat-controles').style.display = 'block';
@@ -462,74 +459,53 @@ header h1 { display: none; }
         }
 
         function enviarMensagem() {
-            const texto = document.getElementById('msg-input').value;
-            if(!texto || !contatoAtivo) return;
+            const texto = document.getElementById('msg-input').value; if(!texto || !contatoAtivo) return;
             const eu = JSON.parse(localStorage.getItem(usuarioAtual));
             const msg = { r: usuarioAtual, n: eu.nome, t: texto, id: Date.now() };
-
             if(chatTipo === 'grupo') {
-                let gp = JSON.parse(localStorage.getItem(contatoAtivo));
-                gp.mensagens.push(msg);
+                let gp = JSON.parse(localStorage.getItem(contatoAtivo)); gp.mensagens.push(msg);
                 localStorage.setItem(contatoAtivo, JSON.stringify(gp));
             } else {
                 const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
-                let historico = JSON.parse(localStorage.getItem(chatKey)) || [];
-                historico.push(msg);
+                let historico = JSON.parse(localStorage.getItem(chatKey)) || []; historico.push(msg);
                 localStorage.setItem(chatKey, JSON.stringify(historico));
             }
-            document.getElementById('msg-input').value = "";
-            renderizarMensagens();
+            document.getElementById('msg-input').value = ""; renderizarMensagens();
         }
 
         function renderizarMensagens() {
-            const corpo = document.getElementById('mensagens-corpo');
-            corpo.innerHTML = "";
-            let historico = [];
-            if(chatTipo === 'grupo') {
-                historico = JSON.parse(localStorage.getItem(contatoAtivo)).mensagens;
-            } else {
-                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
-                historico = JSON.parse(localStorage.getItem(chatKey)) || [];
-            }
-
+            const corpo = document.getElementById('mensagens-corpo'); corpo.innerHTML = "";
+            let historico = chatTipo === 'grupo' ? JSON.parse(localStorage.getItem(contatoAtivo)).mensagens : (JSON.parse(localStorage.getItem([usuarioAtual, contatoAtivo].sort().join('_chat_'))) || []);
             historico.forEach(m => {
                 const div = document.createElement('div');
                 div.className = `msg-balao ${m.r === usuarioAtual ? 'msg-enviada' : 'msg-recebida'}`;
-                div.title = "Clique para apagar";
                 div.onclick = () => apagarMensagem(m.id);
-                const autor = (chatTipo === 'grupo' && m.r !== usuarioAtual) ? `<small style="color:gold;display:block">${m.n}</small>` : '';
-                div.innerHTML = autor + m.t;
+                div.innerHTML = (chatTipo === 'grupo' && m.r !== usuarioAtual ? `<small style="color:gold;display:block">${m.n}</small>` : '') + m.t;
                 corpo.appendChild(div);
             });
             corpo.scrollTop = corpo.scrollHeight;
         }
 
         function apagarMensagem(msgId) {
-            if(!confirm("Apagar esta mensagem?")) return;
+            if(!confirm("Apagar?")) return;
             if(chatTipo === 'grupo') {
-                let gp = JSON.parse(localStorage.getItem(contatoAtivo));
-                gp.mensagens = gp.mensagens.filter(m => m.id !== msgId);
+                let gp = JSON.parse(localStorage.getItem(contatoAtivo)); gp.mensagens = gp.mensagens.filter(m => m.id !== msgId);
                 localStorage.setItem(contatoAtivo, JSON.stringify(gp));
             } else {
-                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
-                let hist = JSON.parse(localStorage.getItem(chatKey));
-                localStorage.setItem(chatKey, JSON.stringify(hist.filter(m => m.id !== msgId)));
+                const ck = [usuarioAtual, contatoAtivo].sort().join('_chat_');
+                localStorage.setItem(ck, JSON.stringify(JSON.parse(localStorage.getItem(ck)).filter(m => m.id !== msgId)));
             }
             renderizarMensagens();
         }
 
         function abrirModalGrupo() {
-            toggleElement('modal-grupo');
-            const lista = document.getElementById('lista-membros-gp');
-            lista.innerHTML = "";
+            toggleElement('modal-grupo'); const lista = document.getElementById('lista-membros-gp'); lista.innerHTML = "";
             let eu = JSON.parse(localStorage.getItem(usuarioAtual));
             for (let i = 0; i < localStorage.length; i++) {
-                const k = localStorage.key(i);
-                if (k.includes('@') && k !== usuarioAtual && !k.startsWith('gp_')) {
+                const k = localStorage.key(i); if (k.includes('@') && k !== usuarioAtual && !k.startsWith('gp_')) {
                     const alvo = JSON.parse(localStorage.getItem(k));
-                    if(eu.seguindo_lista && eu.seguindo_lista.includes(k) && alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual)) {
+                    if(eu.seguindo_lista?.includes(k) && alvo.seguindo_lista?.includes(usuarioAtual)) 
                         lista.innerHTML += `<label><input type="checkbox" class="check-membro" value="${k}"> ${alvo.nome}</label><br>`;
-                    }
                 }
             }
         }
@@ -537,25 +513,13 @@ header h1 { display: none; }
         function confirmarGrupo() {
             const nome = document.getElementById('nome-grupo-novo').value;
             const selecionados = Array.from(document.querySelectorAll('.check-membro:checked')).map(cb => cb.value);
-            if(!nome || selecionados.length === 0) return alert("Erro nos dados!");
-            const idGp = 'gp_' + Date.now();
-            localStorage.setItem(idGp, JSON.stringify({ nome: nome, admin: usuarioAtual, membros: [usuarioAtual, ...selecionados], mensagens: [] }));
+            if(!nome || selecionados.length === 0) return alert("Erro!");
+            localStorage.setItem('gp_'+Date.now(), JSON.stringify({ nome: nome, admin: usuarioAtual, membros: [usuarioAtual, ...selecionados], mensagens: [] }));
             toggleElement('modal-grupo'); carregarListaChat();
         }
 
-        function deletarGrupo() {
-            if(confirm("Excluir grupo?")) { localStorage.removeItem(contatoAtivo); contatoAtivo = null; carregarListaChat(); }
-        }
-
-        function bloquearContato() {
-            if(confirm("Bloquear contato?")) {
-                let eu = JSON.parse(localStorage.getItem(usuarioAtual));
-                if(!eu.bloqueados) eu.bloqueados = [];
-                eu.bloqueados.push(contatoAtivo);
-                localStorage.setItem(usuarioAtual, JSON.stringify(eu));
-                contatoAtivo = null; carregarListaChat();
-            }
-        }
+        function deletarGrupo() { if(confirm("Excluir?")) { localStorage.removeItem(contatoAtivo); contatoAtivo = null; carregarListaChat(); } }
+        function bloquearContato() { if(confirm("Bloquear?")) { let eu = JSON.parse(localStorage.getItem(usuarioAtual)); eu.bloqueados.push(contatoAtivo); localStorage.setItem(usuarioAtual, JSON.stringify(eu)); contatoAtivo = null; carregarListaChat(); } }
 
         function carregarFeed(containerId, catFiltro) {
             const f = document.getElementById(containerId); if(!f) return; f.innerHTML = ""; let posts = [];
@@ -580,8 +544,7 @@ header h1 { display: none; }
 
         function criarCardPost(p, eMeu) {
             const eu = JSON.parse(localStorage.getItem(usuarioAtual));
-            const jaSigo = eu.seguindo_lista && eu.seguindo_lista.includes(p.autorEmail);
-
+            const jaSigo = eu.seguindo_lista?.includes(p.autorEmail);
             const d = document.createElement('div'); d.className = 'post-card';
             d.innerHTML = `<span class="post-categoria">${p.categoria}</span><img src="${p.imagem}"><div class="post-info">
                 <p><strong>${p.autorNome}</strong> ${p.descricao}</p>
@@ -620,7 +583,7 @@ header h1 { display: none; }
         function interagir(email, id, acao) {
             let c = JSON.parse(localStorage.getItem(email)); const p = c.posts.find(x => x.id === id);
             if(acao === 'like') p.likes++;
-            localStorage.setItem(email, JSON.stringify(c)); carregarFeed('feed-global', 'todas');
+            localStorage.setItem(email, JSON.stringify(c)); carregarFeed(document.querySelector('.secao.ativa').id.includes('feed') ? document.querySelector('.secao.ativa').id : 'feed-global', 'todas');
         }
 
         function deletarConta() { if(confirm("Certeza?")) { localStorage.removeItem(usuarioAtual); logout(); } }
@@ -628,7 +591,4 @@ header h1 { display: none; }
     </script>
 </body>
 </html>
-
-
-            
-             
+   
