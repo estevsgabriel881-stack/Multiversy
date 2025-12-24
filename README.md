@@ -311,11 +311,12 @@ header h1 { display: none; }
     <div id="home" class="secao"><div class="header-perfil"><h1>Mural da Comunidade</h1><div id="feed-global" class="galeria-fotos"></div></div></div>
     <div id="quadrinhos" class="secao"><div class="header-perfil"><h2>📚 Quadrinhos</h2><div id="feed-quadrinhos" class="galeria-fotos"></div></div></div>
     
-    <div id="livros" class="secao">
-        <div class="header-perfil" style="max-width: 98%; width: 1200px; height: 90vh; padding: 0; overflow: hidden;">
-            <iframe id="frame-biblioteca" src="about:blank" style="width: 100%; height: 100%; border: none; background: white;"></iframe>
+        <div id="livros" class="secao">
+        <div class="header-perfil" style="max-width: 100%; width: 100%; height: 90vh; padding: 0; background: white; border-radius: 15px; overflow: hidden;">
+            <iframe id="frame-biblioteca" src="" style="width: 100%; height: 100%; border: 5px solid gold;" frameborder="0"></iframe>
         </div>
     </div>
+
 
     <div id="impressao" class="secao"><div class="header-perfil"><h2>⚙️ Impressão 3D</h2><div id="feed-impressao" class="galeria-fotos"></div></div></div>
 
@@ -357,22 +358,37 @@ header h1 { display: none; }
         };
 
         // FUNÇÃO MOSTRAR AJUSTADA APENAS NA LÓGICA DE LIVROS
-        function mostrar(idSecao) {
+                function mostrar(idSecao) {
             if (!logado && idSecao !== 'login') return;
-            document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativa'));
-            document.getElementById(idSecao).classList.add('ativa');
+
+            // 1. Esconde todas as seções
+            document.querySelectorAll('.secao').forEach(s => {
+                s.classList.remove('ativa');
+                s.style.display = 'none'; // Garante que sumiu mesmo
+            });
+
+            // 2. Ativa a seção atual
+            const atual = document.getElementById(idSecao);
+            atual.classList.add('ativa');
+            atual.style.display = 'block'; 
             
+            // 3. Lógica de carregamento
             if(idSecao === 'perfil') carregarPerfil();
             if(idSecao === 'home') carregarFeed('feed-global', 'todas');
             if(idSecao === 'chat') carregarListaChat();
-
-            // Chamada do iframe de Livros
+            
+            // LÓGICA DA BIBLIOTECA (SUPABASE)
             if(idSecao === 'livros') {
                 const frame = document.getElementById('frame-biblioteca');
-                if(frame.src.includes('about:blank')) {
-                    frame.src = 'biblioteca.html'; // Certifique-se que o nome do arquivo no github é este
+                // Se o src estiver vazio, ele carrega o arquivo
+                if(!frame.src || frame.src === window.location.href || frame.src.includes('about:blank')) {
+                    frame.src = 'biblioteca.html'; 
                 }
             }
+
+            if(['quadrinhos','impressao'].includes(idSecao)) carregarFeed('feed-'+idSecao, idSecao);
+        }
+
             
             if(['quadrinhos','impressao'].includes(idSecao)) carregarFeed('feed-'+idSecao, idSecao);
         }
