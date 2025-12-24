@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lusther 3D - Biblioteca Global</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background: #1a1a1a; color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        .card-livro { border: 1px solid gold; padding: 20px; border-radius: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.5); }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; }
+        button { background: gold; color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        .capa-preview { width: 120px; height: 170px; object-fit: cover; border: 1px solid #fff; margin-bottom: 10px; }
+        .comentario { background: #333; padding: 8px; margin-top: 5px; border-radius: 4px; font-size: 0.85em; }
+        .meta-ip { color: gold; font-size: 0.7em; }
+    </style>
+</head>
+<body>
+
+    <h2>📚 Escritório de Autores (Lusther 3D)</h2>
+
+    <div class="card-livro">
+        <h3>Escrever Nova Obra</h3>
+        <input type="text" id="titulo" placeholder="Título da Obra">
+        <textarea id="conteudo" rows="5" placeholder="Conteúdo do livro..."></textarea>
+        <input type="file" id="capa" accept="image/*">
+        <button onclick="publicarLivro()">PUBLICAR NO SITE</button>
+    </div>
+
+    <hr>
+
+    <h3>Obras Publicadas</h3>
+    <div id="lista-livros">Carregando obras...</div>
+
+    <script>
+        // Configurações do Supabase
+        const _supabase = supabase.createClient('SUA_SUPABASE_URL', 'SUA_SUPABASE_ANON_KEY');
+
+        // Função para pegar o IP (via serviço externo gratuito)
+        async function obterIP() {
+            try {
+                const resp = await fetch('https://api.ipify.org?format=json');
+                const data = await resp.json();
+                return data.ip;
+            } catch { return 'IP-Privado'; }
+        }
+
+        // Converter imagem para Base64 para salvar no banco
+        function toBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        async function publicarLivro() {
+            const titulo = document.getElementById('titulo').value;
+            const conteudo = document.getElementById('conteudo').value;
+            const capaFile = document.getElementById('capa').files[0];
+            const ip = await obterIP();
+
+            if(!titulo || !conteudo) return alert("Preencha os campos!");
+
+            let capaBase64 = null;
+            if(capaFile) capaBase64 = await toBase64(capaFile);
+
+            const { data, error } = await _supabase
+                .from('livros')
+                .insert([{ 
+                    titulo: titulo, 
+                    conteudo: conteudo, 
+                    capa_url: capaBase64, 
+                    autor_ip: ip 
+                }]);
+
+            if (error) alert("Erro ao publicar: " + error.message);
+            else { alert("Obra publicada com sucesso!"); location.reload(); }
+        }
+
+        async function carregarLivros() {
+            const { data: livros, error } = await _supabase
+                .from('livros')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            const container = document.getElementById('lista-livros');
+            container.innerHTML = '';
+
+            livros.forEach(livro => {
+                const div = document.createElement('div');
+                div.className = 'card-livro';
+                div.innerHTML = `
+                    <div style="display:flex; gap:20px">
+                        ${livro.capa_url ? `<img src="${livro.capa_url}" class="capa-preview">` : ''}
+                        <div>
+                            <h4>${livro.titulo}</h4>
+                            <p>${livro.conteudo.substring(0, 200)}...</p>
+                            <span class="meta-ip">Publicado por IP: ${livro.autor_ip}</span>
+                            <br><br>
+                            <button onclick="abrirLeitura('${livro.id}')">LER OBRA COMPLETA</button>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px">
+                        <h5>Comentários:</h5>
+                        <div id="coments-${livro.id}">
+                            ${livro.comentarios.map(c => `
+                                <div class="comentario">
+                                    <strong>${c.ip}:</strong> ${c.texto}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <input type="text" id="add-c-${livro.id}" placeholder="Escreva um comentário..." style="width:70%">
+                        <button onclick="comentar('${livro.id}')">Postar</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function comentar(idLivro) {
+            const input = document.getElementById(`add-c-${idLivro}`);
+            const ip = await obterIP();
+            
+            // Buscar comentários atuais
+            const { data } = await _supabase.from('livros').select('comentarios').eq('id', idLivro).single();
+            const novosComentarios = [...data.comentarios, { ip: ip, texto: input.value }];
+
+            // Atualizar
+            await _supabase.from('livros').update({ comentarios: novosComentarios }).eq('id', idLivro);
+            carregarLivros();
+        }
+
+        carregarLivros();
+    </script>
+</body>
+</html>
