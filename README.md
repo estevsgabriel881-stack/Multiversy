@@ -306,10 +306,69 @@ header h1 { display: none; }
             </div>
         </div>
     </div>
+
+
+
+
+    
     <div id="home" class="secao"><div class="header-perfil"><h1>Mural da Comunidade</h1><div id="feed-global" class="galeria-fotos"></div></div></div>
     <div id="quadrinhos" class="secao"><div class="header-perfil"><h2>📚 Quadrinhos</h2><div id="feed-quadrinhos" class="galeria-fotos"></div></div></div>
-    <div id="livros" class="secao"><div class="header-perfil"><h2>📖 Livros</h2><div id="feed-livros" class="galeria-fotos"></div></div></div>
+
+
+
+
+
+        <div id="livros" class="secao">
+
+
+
+        <div class="header-perfil" style="max-width: 900px; padding: 0; overflow: hidden; border: 2px solid gold;">
+
+
+
+
+
+            <div style="background-color: #f2e8d5; background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); color: #3b352a; font-family: 'Georgia', serif; padding: 30px; text-align: left;">
+                
+                <div style="background: rgba(255, 255, 255, 0.3); padding: 25px; border-radius: 8px; border: 1px solid #c9bca3; margin-bottom: 40px;">
+
+
+
+
+                                        
+                    <button onclick="salvarObra()" style="background: #5d5444; color: white; border-radius: 0; font-family: 'Georgia', serif;">Biblioteca Fechada</button>
+
+
+
+
+                </div>
+
+               
+
+                
+                
+                   
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    
     <div id="impressao" class="secao"><div class="header-perfil"><h2>⚙️ Impressão 3D</h2><div id="feed-impressao" class="galeria-fotos"></div></div></div>
+
+
+
+
+
+
+
+    
 
     <div id="perfil" class="secao">
         <div class="header-perfil">
