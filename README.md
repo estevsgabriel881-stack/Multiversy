@@ -309,6 +309,44 @@ header h1 { display: none; }
 
 
 <div id="multiversy">
+    <style>
+    /* Estilos para o container e elementos visuais */
+    #multiversy {
+        position: relative;
+        width: 100%;
+        height: 600px; /* Você pode mudar para 100vh se quiser tela cheia */
+        background: #000;
+        overflow: hidden;
+    }
+
+    #barra-legenda {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(8px);
+        display: flex; align-items: center; justify-content: center;
+        gap: 40px; z-index: 100;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        pointer-events: none;
+    }
+
+    .item-legenda {
+        display: flex; align-items: center; gap: 10px;
+        color: white; font-family: sans-serif; font-size: 14px;
+    }
+
+    .quadrado { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #fff; }
+    .cinza { background: #888; }
+    .azul { background: #0077be; }
+
+    #guia {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        color: white; font-family: sans-serif; letter-spacing: 5px;
+        text-transform: uppercase; opacity: 0.3; pointer-events: none; z-index: 10;
+    }
+</style>
+
+<div id="multiversy">
     <div id="barra-legenda">
         <div class="item-legenda">
             <div class="quadrado cinza"></div>
@@ -319,27 +357,175 @@ header h1 { display: none; }
             <span>Ler livro</span>
         </div>
     </div>
-    
     <div id="guia">Mova o mouse ou clique</div>
-    
-    </div>
-
-    
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
-    const container = document.getElementById('multiversy'); // Ele busca a sua div aqui
-    
-    // ... todo o restante do código que passei anteriormente ...
-    
+    // Agora o JavaScript está dentro da tag <script>, então ele não vira texto na tela
+    const container = document.getElementById('multiversy');
+    let cena, camera, renderizador, estrelas, planetas = [], nebulosas = [], buracosNegros = [], galaxias = [];
+    let starPositions;
+
+    // Shader para o efeito de Buraco Negro
+    const blackHoleStarShader = {
+        uniforms: {
+            'pointSize': { value: 2.0 },
+            'blackHolePos': { value: new THREE.Vector3(0, 0, 0) },
+            'blackHoleRadius': { value: 0.0 }
+        },
+        vertexShader: `
+            uniform float pointSize;
+            uniform vec3 blackHolePos;
+            uniform float blackHoleRadius;
+            void main() {
+                vec3 vPosition = position;
+                float distToBlackHole = distance(vPosition, blackHolePos);
+                if (distToBlackHole < blackHoleRadius && blackHoleRadius > 0.1) {
+                    vec3 dirToBlackHole = normalize(blackHolePos - vPosition);
+                    float pullFactor = 1.0 - pow(distToBlackHole / blackHoleRadius, 0.5); 
+                    vPosition += dirToBlackHole * pullFactor * blackHoleRadius * 0.1;
+                }
+                vec4 mvPosition = modelViewMatrix * vec4(vPosition, 1.0);
+                gl_PointSize = pointSize * (1000.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `,
+        fragmentShader: `void main() { gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); }`
+    };
+
     function iniciar() {
-        // ... 
+        cena = new THREE.Scene();
+        
+        // Câmera adaptada ao container
+        camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 1, 10000);
+        camera.position.z = 1000;
+
+        renderizador = new THREE.WebGLRenderer({ antialias: true });
         renderizador.setSize(container.clientWidth, container.clientHeight);
-        container.appendChild(renderizador.domElement); // Ele coloca o universo dentro da div
-        // ...
+        
+        // Anexa o universo dentro da DIV
+        container.appendChild(renderizador.domElement);
+
+        const luzPrincipal = new THREE.DirectionalLight(0xffffff, 1.2);
+        luzPrincipal.position.set(5, 3, 5);
+        cena.add(luzPrincipal);
+        cena.add(new THREE.AmbientLight(0x333333));
+
+        const geometriaEstrelas = new THREE.BufferGeometry();
+        const pos = [];
+        for (let i = 0; i < 15000; i++) {
+            pos.push(THREE.MathUtils.randFloatSpread(4000), THREE.MathUtils.randFloatSpread(4000), THREE.MathUtils.randFloatSpread(4000));
+        }
+        starPositions = new THREE.Float32BufferAttribute(pos, 3);
+        geometriaEstrelas.setAttribute('position', starPositions);
+        
+        const materialEstrelas = new THREE.ShaderMaterial({
+            uniforms: blackHoleStarShader.uniforms,
+            vertexShader: blackHoleStarShader.vertexShader,
+            fragmentShader: blackHoleStarShader.fragmentShader,
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
+        
+        estrelas = new THREE.Points(geometriaEstrelas, materialEstrelas);
+        cena.add(estrelas);
+
+        animar();
+
+        setInterval(criarBuracoNegro, 5 * 60 * 1000);
+        setInterval(criarGalaxia, 2 * 60 * 1000);
     }
-    // ...
+
+    function gerarTexturaPlaneta() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512; canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = `hsl(${Math.random() * 360}, 20%, 15%)`;
+        ctx.fillRect(0, 0, 512, 256);
+        for (let i = 0; i < 60; i++) {
+            const x = Math.random() * 512, y = Math.random() * 256, raio = Math.random() * 80 + 20;
+            const grad = ctx.createRadialGradient(x, y, 0, x, y, raio);
+            grad.addColorStop(0, `hsla(${Math.random() * 360}, 50%, 40%, 0.4)`);
+            grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(x, y, raio, 0, Math.PI * 2); ctx.fill();
+        }
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    function criarPlaneta(x, y) {
+        const rect = container.getBoundingClientRect();
+        const mouseX = ((x - rect.left) / container.clientWidth) * 2 - 1;
+        const mouseY = -((y - rect.top) / container.clientHeight) * 2 + 1;
+
+        const vetor = new THREE.Vector3(mouseX, mouseY, 0.5);
+        vetor.unproject(camera);
+        const dir = vetor.sub(camera.position).normalize();
+        const pos = camera.position.clone().add(dir.multiplyScalar(-camera.position.z / dir.z));
+        
+        const geo = new THREE.SphereGeometry(Math.random() * 45 + 15, 64, 64);
+        const mat = new THREE.MeshPhongMaterial({ map: gerarTexturaPlaneta(), shininess: 5 });
+        const planeta = new THREE.Mesh(geo, mat);
+        planeta.position.set(pos.x, pos.y, pos.z - 500);
+        cena.add(planeta);
+        planetas.push({ mesh: planeta, velocidade: Math.random() * 4 + 2, rotacao: (Math.random() - 0.5) * 0.02 });
+    }
+
+    function criarBuracoNegro() {
+        const grupoBH = new THREE.Group();
+        const core = new THREE.Mesh(new THREE.SphereGeometry(60, 32, 32), new THREE.MeshBasicMaterial({ color: 0x000000 }));
+        grupoBH.add(core);
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(100, 15, 2, 100), new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending }));
+        ring.rotation.x = Math.PI / 2;
+        grupoBH.add(ring);
+        grupoBH.position.set(THREE.MathUtils.randFloatSpread(1000), THREE.MathUtils.randFloatSpread(1000), -5000);
+        cena.add(grupoBH);
+        buracosNegros.push({ mesh: grupoBH, velocidade: 1.5, raioInfluencia: 600 });
+    }
+
+    function criarGalaxia() {
+        const grupoGalaxia = new THREE.Group();
+        for (let i = 0; i < 500; i++) {
+            const star = new THREE.Mesh(new THREE.SphereGeometry(0.5, 4, 4), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            const angle = i * 0.1; const r = i * 1.5;
+            star.position.set(Math.cos(angle) * r, Math.sin(angle) * r, THREE.MathUtils.randFloatSpread(50));
+            grupoGalaxia.add(star);
+        }
+        grupoGalaxia.position.set(THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000), -6000);
+        cena.add(grupoGalaxia);
+        galaxias.push({ mesh: grupoGalaxia, velocidade: 0.5, rotacao: 0.001 });
+    }
+
+    container.addEventListener('mousedown', (e) => {
+        criarPlaneta(e.clientX, e.clientY);
+    });
+
+    function animar() {
+        requestAnimationFrame(animar);
+        
+        if (buracosNegros.length > 0) {
+            blackHoleStarShader.uniforms.blackHolePos.value.copy(buracosNegros[0].mesh.position);
+            blackHoleStarShader.uniforms.blackHoleRadius.value = buracosNegros[0].raioInfluencia;
+        }
+
+        estrelas.rotation.y += 0.0008;
+        planetas.forEach((p, i) => { 
+            p.mesh.position.z += p.velocidade;
+            if(p.mesh.position.z > 1100) { cena.remove(p.mesh); planetas.splice(i,1); }
+        });
+
+        renderizador.render(cena, camera);
+    }
+
+    // Ajuste de janela
+    window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderizador.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    iniciar();
 </script>
 
 
