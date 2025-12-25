@@ -881,6 +881,135 @@ header h1 { display: none; }
         function toggleElement(id) { const e = document.getElementById(id); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
     </script>
 
+
+
+
+
+
+        <script>
+
+        /* 2. FUNÇÃO CORRIGIDA DO MULTIVERSY (Mecanismo de Retorno Reforçado) */
+       
+        
+        
+        
+        
+        
+        
+        
+        function abrirJanelaMultiverso() {
+            const urlRetorno = window.location.href; // Captura o link da sua plataforma
+            const win = window.open('', '_blank');
+
+
+
+
+
+            
+            
+            win.document.write(`
+                <html>
+                <head>
+                  
+                    
+                    
+                    
+                    
+                    <title>Multiversy - Experiência 3D</title>
+
+
+
+
+
+                    
+                    <style>
+                        body { margin: 0; background: #000; overflow: hidden; font-family: sans-serif; }
+                        #barra-legenda { position: absolute; top: 0; width: 100%; height: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; gap: 30px; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.2); pointer-events: none; }
+                        .item { display: flex; align-items: center; gap: 8px; color: white; font-size: 14px; }
+                        .quad { width: 12px; height: 12px; border: 1px solid #fff; }
+                        
+                        /* BOTÃO DE RETORNO ESTILIZADO */
+                        #btn-voltar { 
+                            position: absolute; top: 60px; left: 20px; z-index: 20; 
+                            background: gold; color: black; border: 2px solid #000; 
+                            padding: 12px 24px; cursor: pointer; font-weight: bold; 
+                            border-radius: 8px; text-decoration: none; display: inline-block;
+                        }
+
+
+
+
+
+                        
+                    </style>
+                </head>
+                <body>
+                    <a id="btn-voltar" href="\${urlRetorno}" onclick="window.close();">⬅ RETORNAR À PLATAFORMA</a>
+                    
+                    <div id="barra-legenda">
+                        <div class="item"><div class="quad" style="background:#888"></div>Escrever Livro</div>
+                        <div class="item"><div class="quad" style="background:#0077be"></div>Ler Livro</div>
+                    </div>
+
+
+
+
+                    
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+                    <script>
+                        let cena, camera, render, estrelas, planetas = [];
+                        function init() {
+                            cena = new THREE.Scene();
+                            camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 10000);
+                            camera.position.z = 1000;
+                            render = new THREE.WebGLRenderer({antialias: true});
+                            render.setSize(window.innerWidth, window.innerHeight);
+                            document.body.appendChild(render.domElement);
+                            const luz = new THREE.PointLight(0xffffff, 1); luz.position.set(0,0,1000); cena.add(luz);
+                            const geo = new THREE.BufferGeometry(); const pos = [];
+                            for(let i=0; i<10000; i++) pos.push(Math.random()*4000-2000, Math.random()*4000-2000, Math.random()*4000-2000);
+                            geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+                            estrelas = new THREE.Points(geo, new THREE.PointsMaterial({color: 0xffffff, size: 2}));
+                            cena.add(estrelas);
+                            window.addEventListener('mousedown', (e) => {
+                                const g = new THREE.SphereGeometry(Math.random()*30+10, 32, 32);
+                                const m = new THREE.MeshPhongMaterial({color: Math.random() > 0.5 ? 0x888888 : 0x0077be});
+                                const p = new THREE.Mesh(g, m);
+                                p.position.set((e.clientX/window.innerWidth)*2000-1000, -(e.clientY/window.innerHeight)*2000+1000, -500);
+                                cena.add(p); planetas.push({mesh: p, v: Math.random()*5+2});
+                            });
+                            loop();
+                        }
+                        function loop() {
+                            requestAnimationFrame(loop);
+                            estrelas.rotation.y += 0.001;
+                            planetas.forEach(p => p.mesh.position.z += p.v);
+                            render.render(cena, camera);
+                        }
+
+
+
+
+                        
+                        init();
+                    <\/script>
+
+
+
+                    
+                </body>
+                </html>
+            `);
+        }
+    </script>
 </body>
 </html>
+
+
+</body>
+</html>
+
+
+
+
     
