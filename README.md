@@ -311,8 +311,17 @@ header h1 { display: none; }
 
 
         
-        <div id="multiversy" class="secao"><div class="header-perfil"><h2>🌌 Multiversy</h2><div class="info-card"><p>Conteúdo em desenvolvimento...</p></div></div></div>
-
+            <div id="multiversy" class="secao">
+        <div class="header-perfil">
+            <h2>🌌 Multiversy 3D</h2>
+            <div class="info-card" style="text-align: center; padding: 40px;">
+                <p>Clique abaixo para entrar na experiência interativa do Multiverso.</p>
+                <button onclick="abrirJanelaMultiverso()" style="background: gold; color: black; width: auto; padding: 15px 30px; margin-top: 20px; font-size: 16px;">
+                    INICIAR UNIVERSO 3D
+                </button>
+            </div>
+        </div>
+    </div>
 
 
 
