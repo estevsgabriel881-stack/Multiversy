@@ -1010,7 +1010,7 @@ header h1 { display: none; }
                 </html>
             `);
         }
-    </script>
+    <\/script>
 
 </body>
 </html>
