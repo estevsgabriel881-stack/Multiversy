@@ -888,7 +888,7 @@ header h1 { display: none; }
 
         <script>
 
-        /* 2. FUNÇÃO CORRIGIDA DO MULTIVERSY (Mecanismo de Retorno Reforçado) */
+        /* Script Multiversy */
        
         
         
@@ -909,13 +909,13 @@ header h1 { display: none; }
             
             win.document.write(`
                 <html>
+
+
+
+
+                
                 <head>
-                  
-                    
-                    
-                    
-                    
-                    <title>Multiversy - Experiência 3D</title>
+                <title>Multiversy - Experiência 3D</title>
 
 
 
@@ -934,16 +934,22 @@ header h1 { display: none; }
                             background: gold; color: black; border: 2px solid #000; 
                             padding: 12px 24px; cursor: pointer; font-weight: bold; 
                             border-radius: 8px; text-decoration: none; display: inline-block;
-                        }
-
-
-
-
-
-                        
-                    </style>
+                        } </style>
                 </head>
+
+
+
+
+
+
+
+
+                
                 <body>
+
+
+
+                
                     <a id="btn-voltar" href="\${urlRetorno}" onclick="window.close();">⬅ RETORNAR À PLATAFORMA</a>
                     
                     <div id="barra-legenda">
@@ -952,10 +958,12 @@ header h1 { display: none; }
                     </div>
 
 
+                    
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+
 
 
                     
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
                     <script>
                         let cena, camera, render, estrelas, planetas = [];
                         function init() {
@@ -986,18 +994,19 @@ header h1 { display: none; }
                             planetas.forEach(p => p.mesh.position.z += p.v);
                             render.render(cena, camera);
                         }
-
-
-
-
                         
                         init();
-                    <\/script>
+                    </script>
 
 
 
                     
                 </body>
+
+
+
+
+                
                 </html>
             `);
         }
