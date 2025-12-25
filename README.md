@@ -883,34 +883,37 @@ header h1 { display: none; }
 
 
 
-
-    
-</body>
-
-
-
-    <script>
-        /* FUNÇÃO PARA ABRIR O MULTIVERSO EM PÁGINA NOVA COM SEU PRÓPRIO CÓDIGO */
         function abrirJanelaMultiverso() {
+            const urlRetorno = window.location.href; // Captura o link da sua plataforma
             const win = window.open('', '_blank');
+            
             win.document.write(`
                 <html>
                 <head>
                     <title>Multiversy - Experiência 3D</title>
                     <style>
                         body { margin: 0; background: #000; overflow: hidden; font-family: sans-serif; }
-                        #barra-legenda { position: absolute; top: 0; width: 100%; height: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; gap: 30px; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.2); }
+                        #barra-legenda { position: absolute; top: 0; width: 100%; height: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; gap: 30px; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.2); pointer-events: none; }
                         .item { display: flex; align-items: center; gap: 8px; color: white; font-size: 14px; }
                         .quad { width: 12px; height: 12px; border: 1px solid #fff; }
-                        #btn-voltar { position: absolute; top: 60px; left: 20px; z-index: 20; background: gold; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 5px; }
+                        
+                        /* BOTÃO DE RETORNO ESTILIZADO */
+                        #btn-voltar { 
+                            position: absolute; top: 60px; left: 20px; z-index: 20; 
+                            background: gold; color: black; border: 2px solid #000; 
+                            padding: 12px 24px; cursor: pointer; font-weight: bold; 
+                            border-radius: 8px; text-decoration: none; display: inline-block;
+                        }
                     </style>
                 </head>
                 <body>
-                    <button id="btn-voltar" onclick="window.close()">⬅ RETORNAR À PLATAFORMA</button>
+                    <a id="btn-voltar" href="\${urlRetorno}" onclick="window.close();">⬅ RETORNAR À PLATAFORMA</a>
+                    
                     <div id="barra-legenda">
                         <div class="item"><div class="quad" style="background:#888"></div>Escrever Livro</div>
                         <div class="item"><div class="quad" style="background:#0077be"></div>Ler Livro</div>
                     </div>
+                    
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
                     <script>
                         let cena, camera, render, estrelas, planetas = [];
@@ -921,14 +924,12 @@ header h1 { display: none; }
                             render = new THREE.WebGLRenderer({antialias: true});
                             render.setSize(window.innerWidth, window.innerHeight);
                             document.body.appendChild(render.domElement);
-                            
                             const luz = new THREE.PointLight(0xffffff, 1); luz.position.set(0,0,1000); cena.add(luz);
                             const geo = new THREE.BufferGeometry(); const pos = [];
                             for(let i=0; i<10000; i++) pos.push(Math.random()*4000-2000, Math.random()*4000-2000, Math.random()*4000-2000);
                             geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
                             estrelas = new THREE.Points(geo, new THREE.PointsMaterial({color: 0xffffff, size: 2}));
                             cena.add(estrelas);
-
                             window.addEventListener('mousedown', (e) => {
                                 const g = new THREE.SphereGeometry(Math.random()*30+10, 32, 32);
                                 const m = new THREE.MeshPhongMaterial({color: Math.random() > 0.5 ? 0x888888 : 0x0077be});
@@ -945,11 +946,16 @@ header h1 { display: none; }
                             render.render(cena, camera);
                         }
                         init();
-                    </script>
+                    <\/script>
                 </body>
                 </html>
             `);
         }
-
-
+    </script>
+</body>
 </html>
+
+
+
+
+    
