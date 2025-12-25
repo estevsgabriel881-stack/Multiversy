@@ -1002,9 +1002,6 @@ header h1 { display: none; }
             `);
         }
     </script>
-</body>
-</html>
-
 
 </body>
 </html>
