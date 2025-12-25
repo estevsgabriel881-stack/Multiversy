@@ -881,6 +881,10 @@ header h1 { display: none; }
         function toggleElement(id) { const e = document.getElementById(id); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
     </script>
 
+</body>
+</html>
+
+
 
 
         function abrirJanelaMultiverso() {
