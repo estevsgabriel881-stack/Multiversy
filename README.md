@@ -26,6 +26,15 @@ body > header, .ui-header, h1:first-of-type {
 /* Se o texto "Multiversy" estiver vindo de um <h1> que o GitHub injeta: */
 header h1 { display: none; }
 
+
+
+
+
+
+
+
+
+
 #multiversy {
     position: relative; /* Essencial para prender a legenda aqui dentro */
     width: 100%;
@@ -33,6 +42,19 @@ header h1 { display: none; }
     background: #000;
     overflow: hidden;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Copie os estilos da .item-legenda, .quadrado, etc., para o seu CSS principal */
 
@@ -49,11 +71,28 @@ header h1 { display: none; }
             animation: BackgroundGradient 10s ease infinite;
         }
 
+
+
+
+
+
+
         @keyframes BackgroundGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+
+
+
+
+
+
+
+
+
+
+
 
         nav {
             background: rgba(0, 0, 0, 0.8);
@@ -88,6 +127,11 @@ header h1 { display: none; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .header-perfil { text-align: center; padding: 40px 20px; background: rgba(0, 0, 0, 0.4); border-radius: 15px; margin-top: 20px; max-width: 800px; margin-left: auto; margin-right: auto; }
+
+
+
+
+
         
         input, textarea, select {
             width: 90%;
@@ -98,6 +142,14 @@ header h1 { display: none; }
             outline: none;
             background: white;
         }
+
+
+
+
+
+
+
+        
 
         button { background: #790fcf; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s; }
         button:hover { filter: brightness(1.2); }
@@ -110,6 +162,13 @@ header h1 { display: none; }
             border: 3px solid gold;
             background: #222;
         }
+
+
+
+
+
+
+
 
         .stats { display: flex; justify-content: center; gap: 30px; margin: 15px 0; }
 
@@ -131,6 +190,14 @@ header h1 { display: none; }
             width: 100%;
         }
 
+
+
+
+
+
+
+
+
         .post-card img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
         .post-info p { margin: 5px 0; }
         .post-tags { color: #ffd700; font-size: 0.8em; font-weight: bold; }
@@ -145,11 +212,22 @@ header h1 { display: none; }
             padding-top: 10px;
             font-size: 0.85em;
         }
+
+
+
+
+
+        
         .comentario-item { margin-bottom: 4px; border-bottom: 1px solid #333; padding: 2px 0; }
         
         .btn-perigo { background: #ff4757; margin-top: 20px; font-size: 0.8em; width: auto; padding: 8px 15px; }
         
         .info-card { background: rgba(255, 215, 0, 0.1); border: 1px solid gold; padding: 20px; border-radius: 10px; margin-top: 20px; }
+
+
+
+
+
 
         .btn-chat-flutuante {
             position: fixed;
@@ -170,6 +248,14 @@ header h1 { display: none; }
             border: 2px solid #000;
             transition: 0.3s;
         }
+
+
+
+
+
+
+
+        
         .btn-chat-flutuante:hover { transform: scale(1.1); background: white; }
 
         .chat-container {
@@ -182,6 +268,13 @@ header h1 { display: none; }
             margin-top: 20px;
         }
 
+
+
+
+
+
+        
+
         .lista-contatos {
             width: 30%;
             border-right: 1px solid #444;
@@ -190,11 +283,28 @@ header h1 { display: none; }
             background: rgba(255,255,255,0.05);
         }
 
+
+
+
+
+
+
+
+
+        
+
         .contato-item {
             padding: 12px;
             border-bottom: 1px solid #222;
             cursor: pointer;
         }
+
+
+
+
+
+
+        
         .contato-item:hover { background: rgba(255, 215, 0, 0.2); }
 
         .janela-conversa {
@@ -235,6 +345,15 @@ header h1 { display: none; }
         }
     </style>
 </head>
+
+
+
+
+
+
+
+
+
 <body>
 
     <nav id="menu-principal">
@@ -247,6 +366,13 @@ header h1 { display: none; }
         <a onclick="mostrar('perfil')">👤 Perfil</a>
         <a onclick="logout()" style="color: #ff4757;">🚪 Sair</a>
     </nav>
+
+
+
+
+
+
+    
 
     <button id="btn-chat" class="btn-chat-flutuante" onclick="mostrar('chat')">💬</button>
 
@@ -316,7 +442,13 @@ header h1 { display: none; }
             <h2>🌌 Multiversy 3D</h2>
             <div class="info-card" style="text-align: center; padding: 40px;">
                 <p>Clique abaixo para entrar na experiência interativa do Multiverso.</p>
+               
+                
+                
                 <button onclick="abrirJanelaMultiverso()" style="background: gold; color: black; width: auto; padding: 15px 30px; margin-top: 20px; font-size: 16px;">
+
+
+                
                     INICIAR UNIVERSO 3D
                 </button>
             </div>
@@ -416,9 +548,19 @@ header h1 { display: none; }
                 <button onclick="toggleElement('edit-perfil')" style="width: auto; background: #555;">⚙️ Editar</button>
                 <button onclick="toggleElement('postar-foto')" style="width: auto; background: gold; color: black;">📸 Postar</button>
             </div>
+
+
+
+
+            
             <div id="edit-perfil" style="display:none; margin-top:20px;"><input type="file" id="input-foto"><textarea id="input-bio"></textarea><button onclick="salvarPerfil()">Salvar</button></div>
             <div id="postar-foto" style="display:none; margin-top:20px;">
                 <select id="post-cat"><option value="mural">Mural</option><option value="quadrinhos">Quadrinhos</option><option value="livros">Livros</option><option value="impressao">Impressão 3D</option></select>
+
+
+
+
+                
                 <input type="file" id="input-post"><input type="text" id="post-desc" placeholder="Descrição"><button onclick="postarFoto()">Publicar</button>
             </div>
             <div class="galeria-fotos" id="minha-galeria"></div>
@@ -803,7 +945,7 @@ header h1 { display: none; }
                             render.render(cena, camera);
                         }
                         init();
-                    <\/script>
+                    </script>
                 </body>
                 </html>
             `);
