@@ -12,22 +12,26 @@ body > header, .ui-header, h1:first-of-type {
 /* Se o texto "Multiversy" estiver vindo de um <h1> que o GitHub injeta: */
 header h1 { display: none; }
 
-#multiversy {
-    position: relative; /* Essencial para prender a legenda aqui dentro */
-    width: 100%;
-    height: 600px; /* Ou a altura que você desejar */
-    background: #000;
-    overflow: hidden;
-}
 
-        body {
-            background: linear-gradient(45deg, #4f4f4f, #ffd700, #000000, #ffffff, #c0c0c0, #ff8c00);
+
+        body 
+
+
+
+
+{
+            background: linear-gradient(45deg, #f4ecd8, black, #f4ecd8, #f4ecd8, black, #f4ecd8);
             background-size: 400% 400%;
             background-attachment: fixed;
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Georgia; serif;
             margin: 0;
-            animation: BackgroundGradient 10s ease infinite;
+            animation:
+BackgroundGradient 10s ease infinite;
+
+
+
+
         }
 
         @keyframes BackgroundGradient {
@@ -256,26 +260,106 @@ header h1 { display: none; }
     </div>
 
     <div id="chat" class="secao">
+
+
+
         <div class="header-perfil" style="max-width: 1000px;">
+
+
+
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                <h2>💬 Mensagens</h2>
-                <button onclick="abrirModalGrupo()" style="width:auto; padding:5px 15px; background:gold; color:black">+ NOVO GRUPO</button>
+
+
+<h2>💬 Mensagens</h2>
+
+
+               
+<button onclick="abrirModalGrupo()" style="width:auto; padding:5px 15px; background:gold; color:black">+ NOVO GRUPO</button>
+
+
+
             </div>
-            <div class="chat-container">
-                <div class="lista-contatos" id="chat-usuarios"></div>
-                <div class="janela-conversa">
-                    <div id="chat-status" style="padding: 10px; background: rgba(0,0,0,0.3); border-bottom: 1px solid gold; font-size: 0.8em; display:flex; justify-content:space-between">
-                        <span id="txt-status">Selecione uma conversa (Somente amigos mútuos)</span>
-                        <div id="acoes-chat" style="display:none">
-                            <button id="btn-del-gp" onclick="deletarGrupo()" style="background:red; width:auto; padding:2px 8px; font-size:10px; display:none">EXCLUIR GRUPO</button>
-                            <button onclick="bloquearContato()" style="background:#444; width:auto; padding:2px 8px; font-size:10px">BLOQUEAR</button>
+
+
+
+
+
+
+
+   <div class="chat-container">
+
+
+
+   <div class="lista-contatos" id="chat-usuarios"></div>
+
+
+
+
+   <div class="janela-conversa">
+
+
+
+   
+<div id="chat-status" style="padding: 10px; 
+
+background: rgba(0,0,0,0.3); 
+
+
+border-bottom: 1px solid gold; 
+
+font-size: 0.8em; 
+
+
+display:flex; 
+
+
+justify-content:space-between">
+
+
+<span id="txt-status">Selecione uma conversa (Somente amigos mútuos)</span>
+
+
+<div id="acoes-chat" style="display:none">
+
+
+
+<button id="btn-del-gp" onclick="deletarGrupo()" style="background:red; width:auto; padding:2px 8px; font-size:10px; display:none">EXCLUIR GRUPO</button>
+
+
+
+<button onclick="bloquearContato()" style="background:#444; width:auto; padding:2px 8px; font-size:10px">BLOQUEAR</button>
+
+
+
+
                         </div>
                     </div>
-                    <div id="mensagens-corpo"></div>
-                    <div id="chat-controles" style="display:none; padding: 10px; background: rgba(0,0,0,0.4);">
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" id="msg-input" placeholder="Sua mensagem..." style="margin:0;">
-                            <button onclick="enviarMensagem()" style="width: 80px;">Enviar</button>
+
+
+
+
+ <div id="mensagens-corpo"></div>
+
+
+
+ <div id="chat-controles" style="display:none; padding: 10px; background: rgba(0,0,0,0.4);">
+
+
+<div style="display: flex; gap: 10px;">
+
+
+
+<input type="text" id="msg-input" placeholder="Sua mensagem..." style="margin:0;">
+                            
+
+
+
+<button onclick="enviarMensagem()" style="width: 80px;">Enviar</button>
+
+
+
+
+
                         </div>
                     </div>
                 </div>
@@ -284,28 +368,71 @@ header h1 { display: none; }
     </div>
 
     <div id="modal-grupo" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#1a1a1a; padding:20px; border:2px solid gold; border-radius:10px; z-index:3000; width:300px; text-align:center">
+
+
+
         <h3>Novo Grupo</h3>
+
+
+
+
+
         <input type="text" id="nome-grupo-novo" placeholder="Nome do Grupo">
+
+
+
+
+
         <div id="lista-membros-gp" style="text-align:left; max-height:150px; overflow-y:auto; margin:10px 0; font-size:12px"></div>
         <button onclick="confirmarGrupo()">CRIAR</button>
+
+
+
         <button onclick="toggleElement('modal-grupo')" style="background:#444; margin-top:5px">CANCELAR</button>
     </div>
 
     <div id="multiversy" class="secao">
+
+
+
+
         <div class="header-perfil">
+
+
+
             <h2>🌌 Multiversy 3D</h2>
+
+
+
             <div class="info-card" style="text-align: center; padding: 40px;">
-                <p>Clique abaixo para entrar na experiência interativa do Multiverso.</p>
-                <button onclick="abrirJanelaMultiverso()" style="background: gold; color: black; width: auto; padding: 15px 30px; margin-top: 20px; font-size: 16px;">
-                    INICIAR UNIVERSO 3D
-                </button>
+
+
+
+<p>Atenção: Estamos em bing bang</p>
+
+
+
+<button onclick="abrirJanelaMultiverso()" style="background: gold;
+ color: black;
+ width: auto;
+ padding: 15px 30px;
+ margin-top: 20px;
+ font-size: 16px;">Multiversy</button>
+
+
+
+
             </div>
         </div>
     </div>
 
+
+
+
+
     <div id="exchange" class="secao">
         <div class="header-perfil" style="max-width: 95%; width: 1100px;">
-            <h2>💱 Exchange Lusther 3D</h2>
+            <h2>💱 Exchange</h2>
             <div class="container-grafico">
                 <iframe width="100%" height="100%" src="https://www.geckoterminal.com/es/polygon_pos/pools/0x0de9bb162ce01f953647c236fff94a9ed492c341?embed=1&info=0&swaps=1" frameborder="0"></iframe>
             </div>
@@ -313,13 +440,36 @@ header h1 { display: none; }
     </div>
 
     <div id="home" class="secao"><div class="header-perfil"><h1>Mural da Comunidade</h1><div id="feed-global" class="galeria-fotos"></div></div></div>
+
+
+
+
+
     <div id="quadrinhos" class="secao"><div class="header-perfil"><h2>📚 Quadrinhos</h2><div id="feed-quadrinhos" class="galeria-fotos"></div></div></div>
 
-    <div id="livros" class="secao">
+    
+
+
+
+
+<div id="livros" class="secao">
         <div class="header-perfil" style="max-width: 900px; padding: 0; overflow: hidden; border: 2px solid gold;">
-            <div style="background-color: #f2e8d5; background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); color: #3b352a; font-family: 'Georgia', serif; padding: 30px; text-align: left;">
-                <div style="background: rgba(255, 255, 255, 0.3); padding: 25px; border-radius: 8px; border: 1px solid #c9bca3; margin-bottom: 40px;">
+            
+
+
+
+<div style="background-color: #f2e8d5; background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); color: #3b352a; font-family: 'Georgia', serif; padding: 30px; text-align: left;">
+                
+
+
+
+<div style="background: rgba(255, 255, 255, 0.3); padding: 25px; border-radius: 8px; border: 1px solid #c9bca3; margin-bottom: 40px;">
                     <button onclick="salvarObra()" style="background: #5d5444; color: white; border-radius: 0; font-family: 'Georgia', serif;">Biblioteca Fechada</button>
+
+
+
+
+
                 </div>
             </div>
         </div>
