@@ -1,17 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -26,15 +12,6 @@ body > header, .ui-header, h1:first-of-type {
 /* Se o texto "Multiversy" estiver vindo de um <h1> que o GitHub injeta: */
 header h1 { display: none; }
 
-
-
-
-
-
-
-
-
-
 #multiversy {
     position: relative; /* Essencial para prender a legenda aqui dentro */
     width: 100%;
@@ -42,24 +19,6 @@ header h1 { display: none; }
     background: #000;
     overflow: hidden;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Copie os estilos da .item-legenda, .quadrado, etc., para o seu CSS principal */
-
-
-
 
         body {
             background: linear-gradient(45deg, #4f4f4f, #ffd700, #000000, #ffffff, #c0c0c0, #ff8c00);
@@ -71,28 +30,11 @@ header h1 { display: none; }
             animation: BackgroundGradient 10s ease infinite;
         }
 
-
-
-
-
-
-
         @keyframes BackgroundGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
-
-
-
-
-
-
-
-
-
-
 
         nav {
             background: rgba(0, 0, 0, 0.8);
@@ -127,11 +69,6 @@ header h1 { display: none; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .header-perfil { text-align: center; padding: 40px 20px; background: rgba(0, 0, 0, 0.4); border-radius: 15px; margin-top: 20px; max-width: 800px; margin-left: auto; margin-right: auto; }
-
-
-
-
-
         
         input, textarea, select {
             width: 90%;
@@ -142,14 +79,6 @@ header h1 { display: none; }
             outline: none;
             background: white;
         }
-
-
-
-
-
-
-
-        
 
         button { background: #790fcf; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s; }
         button:hover { filter: brightness(1.2); }
@@ -162,13 +91,6 @@ header h1 { display: none; }
             border: 3px solid gold;
             background: #222;
         }
-
-
-
-
-
-
-
 
         .stats { display: flex; justify-content: center; gap: 30px; margin: 15px 0; }
 
@@ -190,14 +112,6 @@ header h1 { display: none; }
             width: 100%;
         }
 
-
-
-
-
-
-
-
-
         .post-card img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
         .post-info p { margin: 5px 0; }
         .post-tags { color: #ffd700; font-size: 0.8em; font-weight: bold; }
@@ -212,22 +126,12 @@ header h1 { display: none; }
             padding-top: 10px;
             font-size: 0.85em;
         }
-
-
-
-
-
         
         .comentario-item { margin-bottom: 4px; border-bottom: 1px solid #333; padding: 2px 0; }
         
         .btn-perigo { background: #ff4757; margin-top: 20px; font-size: 0.8em; width: auto; padding: 8px 15px; }
         
         .info-card { background: rgba(255, 215, 0, 0.1); border: 1px solid gold; padding: 20px; border-radius: 10px; margin-top: 20px; }
-
-
-
-
-
 
         .btn-chat-flutuante {
             position: fixed;
@@ -248,13 +152,6 @@ header h1 { display: none; }
             border: 2px solid #000;
             transition: 0.3s;
         }
-
-
-
-
-
-
-
         
         .btn-chat-flutuante:hover { transform: scale(1.1); background: white; }
 
@@ -268,13 +165,6 @@ header h1 { display: none; }
             margin-top: 20px;
         }
 
-
-
-
-
-
-        
-
         .lista-contatos {
             width: 30%;
             border-right: 1px solid #444;
@@ -283,27 +173,11 @@ header h1 { display: none; }
             background: rgba(255,255,255,0.05);
         }
 
-
-
-
-
-
-
-
-
-        
-
         .contato-item {
             padding: 12px;
             border-bottom: 1px solid #222;
             cursor: pointer;
         }
-
-
-
-
-
-
         
         .contato-item:hover { background: rgba(255, 215, 0, 0.2); }
 
@@ -346,14 +220,6 @@ header h1 { display: none; }
     </style>
 </head>
 
-
-
-
-
-
-
-
-
 <body>
 
     <nav id="menu-principal">
@@ -366,13 +232,6 @@ header h1 { display: none; }
         <a onclick="mostrar('perfil')">👤 Perfil</a>
         <a onclick="logout()" style="color: #ff4757;">🚪 Sair</a>
     </nav>
-
-
-
-
-
-
-    
 
     <button id="btn-chat" class="btn-chat-flutuante" onclick="mostrar('chat')">💬</button>
 
@@ -432,37 +291,18 @@ header h1 { display: none; }
         <button onclick="toggleElement('modal-grupo')" style="background:#444; margin-top:5px">CANCELAR</button>
     </div>
 
-
-
-
-
-        
-            <div id="multiversy" class="secao">
+    <div id="multiversy" class="secao">
         <div class="header-perfil">
             <h2>🌌 Multiversy 3D</h2>
             <div class="info-card" style="text-align: center; padding: 40px;">
                 <p>Clique abaixo para entrar na experiência interativa do Multiverso.</p>
-               
-                
-                
                 <button onclick="abrirJanelaMultiverso()" style="background: gold; color: black; width: auto; padding: 15px 30px; margin-top: 20px; font-size: 16px;">
-
-
-                
                     INICIAR UNIVERSO 3D
                 </button>
             </div>
         </div>
     </div>
 
-
-
-
-
-
-
-
-    
     <div id="exchange" class="secao">
         <div class="header-perfil" style="max-width: 95%; width: 1100px;">
             <h2>💱 Exchange Lusther 3D</h2>
@@ -472,68 +312,20 @@ header h1 { display: none; }
         </div>
     </div>
 
-
-
-
-    
     <div id="home" class="secao"><div class="header-perfil"><h1>Mural da Comunidade</h1><div id="feed-global" class="galeria-fotos"></div></div></div>
     <div id="quadrinhos" class="secao"><div class="header-perfil"><h2>📚 Quadrinhos</h2><div id="feed-quadrinhos" class="galeria-fotos"></div></div></div>
 
-
-
-
-
-        <div id="livros" class="secao">
-
-
-
+    <div id="livros" class="secao">
         <div class="header-perfil" style="max-width: 900px; padding: 0; overflow: hidden; border: 2px solid gold;">
-
-
-
-
-
             <div style="background-color: #f2e8d5; background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); color: #3b352a; font-family: 'Georgia', serif; padding: 30px; text-align: left;">
-                
                 <div style="background: rgba(255, 255, 255, 0.3); padding: 25px; border-radius: 8px; border: 1px solid #c9bca3; margin-bottom: 40px;">
-
-
-
-
-                                        
                     <button onclick="salvarObra()" style="background: #5d5444; color: white; border-radius: 0; font-family: 'Georgia', serif;">Biblioteca Fechada</button>
-
-
-
-
                 </div>
-
-               
-
-                
-                
-                   
             </div>
         </div>
     </div>
 
-
-
-
-
-
-
-
-    
     <div id="impressao" class="secao"><div class="header-perfil"><h2>⚙️ Impressão 3D</h2><div id="feed-impressao" class="galeria-fotos"></div></div></div>
-
-
-
-
-
-
-
-    
 
     <div id="perfil" class="secao">
         <div class="header-perfil">
@@ -548,48 +340,16 @@ header h1 { display: none; }
                 <button onclick="toggleElement('edit-perfil')" style="width: auto; background: #555;">⚙️ Editar</button>
                 <button onclick="toggleElement('postar-foto')" style="width: auto; background: gold; color: black;">📸 Postar</button>
             </div>
-
-
-
-
             
             <div id="edit-perfil" style="display:none; margin-top:20px;"><input type="file" id="input-foto"><textarea id="input-bio"></textarea><button onclick="salvarPerfil()">Salvar</button></div>
             <div id="postar-foto" style="display:none; margin-top:20px;">
                 <select id="post-cat"><option value="mural">Mural</option><option value="quadrinhos">Quadrinhos</option><option value="livros">Livros</option><option value="impressao">Impressão 3D</option></select>
-
-
-
-
-                
                 <input type="file" id="input-post"><input type="text" id="post-desc" placeholder="Descrição"><button onclick="postarFoto()">Publicar</button>
             </div>
             <div class="galeria-fotos" id="minha-galeria"></div>
             <button onclick="deletarConta()" class="btn-perigo">🗑️ Excluir Conta</button>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <script>
         let logado = false;
@@ -645,10 +405,11 @@ header h1 { display: none; }
 
         function logout() { localStorage.removeItem('sessao_ativa'); location.reload(); }
 
-        // LÓGICA DE SEGUIR E LIBERAR CHAT
         function seguir(email) {
             if(email === usuarioAtual) return;
-            let a = JSON.parse(localStorage.getItem(email)), eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            // Melhoria: Fallback para evitar erro se o usuário não for encontrado
+            let a = JSON.parse(localStorage.getItem(email)) || {};
+            let eu = JSON.parse(localStorage.getItem(usuarioAtual)) || {};
             if(!eu.seguindo_lista) eu.seguindo_lista = [];
             
             if(!eu.seguindo_lista.includes(email)) {
@@ -659,7 +420,6 @@ header h1 { display: none; }
             localStorage.setItem(email, JSON.stringify(a)); 
             localStorage.setItem(usuarioAtual, JSON.stringify(eu));
             
-            // Recarrega visualmente dependendo de onde está
             const secaoAtiva = document.querySelector('.secao.ativa').id;
             mostrar(secaoAtiva);
         }
@@ -667,14 +427,13 @@ header h1 { display: none; }
         function carregarListaChat() {
             const lista = document.getElementById('chat-usuarios');
             lista.innerHTML = "";
-            let eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            let eu = JSON.parse(localStorage.getItem(usuarioAtual)) || { seguindo_lista: [], bloqueados: [] };
 
-            // Listar Grupos
             for (let i = 0; i < localStorage.length; i++) {
                 const k = localStorage.key(i);
                 if (k.startsWith('gp_')) {
                     const gp = JSON.parse(localStorage.getItem(k));
-                    if (gp.membros.includes(usuarioAtual)) {
+                    if (gp && gp.membros && gp.membros.includes(usuarioAtual)) {
                         const d = document.createElement('div');
                         d.className = 'contato-item';
                         d.innerHTML = `<span style="color:gold; font-size:10px">GRUPO</span><br><strong>${gp.nome}</strong>`;
@@ -684,12 +443,11 @@ header h1 { display: none; }
                 }
             }
 
-            // Listar Privados (Trava de Seguidores Mútuos)
             for (let i = 0; i < localStorage.length; i++) {
                 const k = localStorage.key(i);
                 if (k === 'sessao_ativa' || !k.includes('@') || k === usuarioAtual || k.startsWith('gp_') || k.includes('_chat_')) continue;
                 
-                const alvo = JSON.parse(localStorage.getItem(k));
+                const alvo = JSON.parse(localStorage.getItem(k)) || {};
                 const euSigo = eu.seguindo_lista && eu.seguindo_lista.includes(k);
                 const eleMeSegue = alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual);
                 const bloqueado = (eu.bloqueados && eu.bloqueados.includes(k)) || (alvo.bloqueados && alvo.bloqueados.includes(usuarioAtual));
@@ -707,7 +465,7 @@ header h1 { display: none; }
         function abrirConversa(id, tipo) {
             contatoAtivo = id;
             chatTipo = tipo;
-            const dados = JSON.parse(localStorage.getItem(id));
+            const dados = JSON.parse(localStorage.getItem(id)) || { nome: "Usuário" };
             document.getElementById('txt-status').innerText = tipo === 'grupo' ? dados.nome : dados.nome;
             document.getElementById('chat-controles').style.display = 'block';
             document.getElementById('acoes-chat').style.display = 'flex';
@@ -718,7 +476,7 @@ header h1 { display: none; }
         function enviarMensagem() {
             const texto = document.getElementById('msg-input').value;
             if(!texto || !contatoAtivo) return;
-            const eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            const eu = JSON.parse(localStorage.getItem(usuarioAtual)) || { nome: "Eu" };
             const msg = { r: usuarioAtual, n: eu.nome, t: texto, id: Date.now() };
 
             if(chatTipo === 'grupo') {
@@ -740,7 +498,8 @@ header h1 { display: none; }
             corpo.innerHTML = "";
             let historico = [];
             if(chatTipo === 'grupo') {
-                historico = JSON.parse(localStorage.getItem(contatoAtivo)).mensagens;
+                const gpData = JSON.parse(localStorage.getItem(contatoAtivo));
+                historico = gpData ? gpData.mensagens : [];
             } else {
                 const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
                 historico = JSON.parse(localStorage.getItem(chatKey)) || [];
@@ -755,7 +514,8 @@ header h1 { display: none; }
                 div.innerHTML = autor + m.t;
                 corpo.appendChild(div);
             });
-            corpo.scrollTop = corpo.scrollHeight;
+            // Melhoria: Scroll suave para a última mensagem
+            corpo.scrollTo({ top: corpo.scrollHeight, behavior: 'smooth' });
         }
 
         function apagarMensagem(msgId) {
@@ -766,7 +526,7 @@ header h1 { display: none; }
                 localStorage.setItem(contatoAtivo, JSON.stringify(gp));
             } else {
                 const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
-                let hist = JSON.parse(localStorage.getItem(chatKey));
+                let hist = JSON.parse(localStorage.getItem(chatKey)) || [];
                 localStorage.setItem(chatKey, JSON.stringify(hist.filter(m => m.id !== msgId)));
             }
             renderizarMensagens();
@@ -776,11 +536,11 @@ header h1 { display: none; }
             toggleElement('modal-grupo');
             const lista = document.getElementById('lista-membros-gp');
             lista.innerHTML = "";
-            let eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            let eu = JSON.parse(localStorage.getItem(usuarioAtual)) || { seguindo_lista: [] };
             for (let i = 0; i < localStorage.length; i++) {
                 const k = localStorage.key(i);
                 if (k.includes('@') && k !== usuarioAtual && !k.startsWith('gp_')) {
-                    const alvo = JSON.parse(localStorage.getItem(k));
+                    const alvo = JSON.parse(localStorage.getItem(k)) || {};
                     if(eu.seguindo_lista && eu.seguindo_lista.includes(k) && alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual)) {
                         lista.innerHTML += `<label><input type="checkbox" class="check-membro" value="${k}"> ${alvo.nome}</label><br>`;
                     }
@@ -803,7 +563,7 @@ header h1 { display: none; }
 
         function bloquearContato() {
             if(confirm("Bloquear contato?")) {
-                let eu = JSON.parse(localStorage.getItem(usuarioAtual));
+                let eu = JSON.parse(localStorage.getItem(usuarioAtual)) || {};
                 if(!eu.bloqueados) eu.bloqueados = [];
                 eu.bloqueados.push(contatoAtivo);
                 localStorage.setItem(usuarioAtual, JSON.stringify(eu));
@@ -815,14 +575,14 @@ header h1 { display: none; }
             const f = document.getElementById(containerId); if(!f) return; f.innerHTML = ""; let posts = [];
             for (let i = 0; i < localStorage.length; i++) {
                 const k = localStorage.key(i); if (k === 'sessao_ativa' || !k.includes('@') || k.includes('_chat_') || k.startsWith('gp_')) continue;
-                const c = JSON.parse(localStorage.getItem(k));
+                const c = JSON.parse(localStorage.getItem(k)) || { posts: [] };
                 if (c.posts) c.posts.forEach(p => { if(catFiltro === 'todas' || p.categoria === catFiltro) posts.push({ ...p, autorNome: c.nome, autorEmail: c.email }); });
             }
             posts.sort((a, b) => b.id - a.id).forEach(p => f.appendChild(criarCardPost(p, p.autorEmail === usuarioAtual)));
         }
 
         function carregarPerfil() {
-            const c = JSON.parse(localStorage.getItem(usuarioAtual));
+            const c = JSON.parse(localStorage.getItem(usuarioAtual)) || { nome: "Usuário", posts: [] };
             document.getElementById('display-nome').innerText = c.nome;
             document.getElementById('display-bio').innerText = c.bio || "Sem bio.";
             document.getElementById('display-foto').src = c.foto || "https://via.placeholder.com/150";
@@ -833,7 +593,7 @@ header h1 { display: none; }
         }
 
         function criarCardPost(p, eMeu) {
-            const eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            const eu = JSON.parse(localStorage.getItem(usuarioAtual)) || { seguindo_lista: [] };
             const jaSigo = eu.seguindo_lista && eu.seguindo_lista.includes(p.autorEmail);
 
             const d = document.createElement('div'); d.className = 'post-card';
@@ -852,14 +612,15 @@ header h1 { display: none; }
             const f = document.getElementById('input-post').files[0], cat = document.getElementById('post-cat').value;
             if(!f) return alert("Selecione!");
             const r = new FileReader(); r.onload = (e) => {
-                let c = JSON.parse(localStorage.getItem(usuarioAtual));
+                let c = JSON.parse(localStorage.getItem(usuarioAtual)) || { posts: [] };
                 c.posts.unshift({ id: Date.now(), imagem: e.target.result, descricao: document.getElementById('post-desc').value, categoria: cat, likes: 0, comentarios: [] });
                 localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil(); toggleElement('postar-foto');
             }; r.readAsDataURL(f);
         }
 
         function salvarPerfil() {
-            let c = JSON.parse(localStorage.getItem(usuarioAtual)); c.bio = document.getElementById('input-bio').value;
+            let c = JSON.parse(localStorage.getItem(usuarioAtual)) || {}; 
+            c.bio = document.getElementById('input-bio').value;
             const f = document.getElementById('input-foto').files[0];
             if(f) { const r = new FileReader(); r.onload = (e) => { c.foto = e.target.result; localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil(); }; r.readAsDataURL(f); }
             else { localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil(); }
@@ -867,24 +628,20 @@ header h1 { display: none; }
         }
 
         function removerPost(id) {
-            let c = JSON.parse(localStorage.getItem(usuarioAtual)); c.posts = c.posts.filter(p => p.id !== id);
+            let c = JSON.parse(localStorage.getItem(usuarioAtual)) || { posts: [] }; 
+            c.posts = c.posts.filter(p => p.id !== id);
             localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil();
         }
 
         function interagir(email, id, acao) {
-            let c = JSON.parse(localStorage.getItem(email)); const p = c.posts.find(x => x.id === id);
-            if(acao === 'like') p.likes++;
+            let c = JSON.parse(localStorage.getItem(email)) || { posts: [] }; 
+            const p = c.posts.find(x => x.id === id);
+            if(p && acao === 'like') p.likes++;
             localStorage.setItem(email, JSON.stringify(c)); carregarFeed('feed-global', 'todas');
         }
 
         function deletarConta() { if(confirm("Certeza?")) { localStorage.removeItem(usuarioAtual); logout(); } }
         function toggleElement(id) { const e = document.getElementById(id); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
     </script>
-
-
-
-
-
-
-        </body>
-        </html>
+</body>
+</html>
