@@ -1,37 +1,21 @@
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Lusther 3D - Plataforma</title>
     <style>
+        /* Esconde o cabeçalho automático do GitHub Pages */
+        body > header, .ui-header, h1:first-of-type { display: none !important; }
+        header h1 { display: none; }
 
-/* Esconde o cabeçalho automático do GitHub Pages */
-body > header, .ui-header, h1:first-of-type {
-    display: none !important;
-}
-
-/* Se o texto "Multiversy" estiver vindo de um <h1> que o GitHub injeta: */
-header h1 { display: none; }
-
-
-
-        body 
-
-
-
-
-{
+        body {
             background: linear-gradient(45deg, #f4ecd8, black, #f4ecd8, #f4ecd8, black, #f4ecd8);
             background-size: 400% 400%;
             background-attachment: fixed;
             color: white;
-            font-family: Georgia; serif;
+            font-family: Georgia, serif;
             margin: 0;
-            animation:
-BackgroundGradient 10s ease infinite;
-
-
-
-
+            animation: BackgroundGradient 10s ease infinite;
         }
 
         @keyframes BackgroundGradient {
@@ -124,41 +108,6 @@ BackgroundGradient 10s ease infinite;
         .btn-group { display: flex; gap: 10px; margin-top: 10px; }
         .btn-interagir { width: auto; padding: 6px 12px; font-size: 0.8em; }
 
-        .comentarios-area {
-            margin-top: 10px;
-            border-top: 1px solid #444;
-            padding-top: 10px;
-            font-size: 0.85em;
-        }
-        
-        .comentario-item { margin-bottom: 4px; border-bottom: 1px solid #333; padding: 2px 0; }
-        
-        .btn-perigo { background: #ff4757; margin-top: 20px; font-size: 0.8em; width: auto; padding: 8px 15px; }
-        
-        .info-card { background: rgba(255, 215, 0, 0.1); border: 1px solid gold; padding: 20px; border-radius: 10px; margin-top: 20px; }
-
-        .btn-chat-flutuante {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: gold;
-            color: black;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            z-index: 2000;
-            border: 2px solid #000;
-            transition: 0.3s;
-        }
-        
-        .btn-chat-flutuante:hover { transform: scale(1.1); background: white; }
-
         .chat-container {
             display: flex;
             height: 60vh;
@@ -169,46 +118,13 @@ BackgroundGradient 10s ease infinite;
             margin-top: 20px;
         }
 
-        .lista-contatos {
-            width: 30%;
-            border-right: 1px solid #444;
-            overflow-y: auto;
-            text-align: left;
-            background: rgba(255,255,255,0.05);
-        }
-
-        .contato-item {
-            padding: 12px;
-            border-bottom: 1px solid #222;
-            cursor: pointer;
-        }
-        
+        .lista-contatos { width: 30%; border-right: 1px solid #444; overflow-y: auto; text-align: left; background: rgba(255,255,255,0.05); }
+        .contato-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; }
         .contato-item:hover { background: rgba(255, 215, 0, 0.2); }
+        .janela-conversa { width: 70%; display: flex; flex-direction: column; background: rgba(0,0,0,0.5); }
+        #mensagens-corpo { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; text-align: left; }
 
-        .janela-conversa {
-            width: 70%;
-            display: flex;
-            flex-direction: column;
-            background: rgba(0,0,0,0.5);
-        }
-
-        #mensagens-corpo {
-            flex-grow: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            text-align: left;
-        }
-
-        .msg-balao {
-            padding: 10px 15px;
-            border-radius: 15px;
-            max-width: 80%;
-            font-size: 0.9em;
-            word-wrap: break-word;
-        }
+        .msg-balao { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 0.9em; word-wrap: break-word; }
         .msg-enviada { align-self: flex-end; background: #790fcf; color: white; }
         .msg-recebida { align-self: flex-start; background: #333; color: white; border: 1px solid #555; }
 
@@ -220,6 +136,14 @@ BackgroundGradient 10s ease infinite;
             border: 2px solid gold;
             margin-top: 15px;
             background: #000;
+        }
+
+        .btn-chat-flutuante {
+            position: fixed; bottom: 20px; right: 20px; background: gold; color: black;
+            width: 60px; height: 60px; border-radius: 50%; display: none;
+            align-items: center; justify-content: center; font-size: 28px;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 2000;
+            border: 2px solid #000; transition: 0.3s;
         }
     </style>
 </head>
@@ -260,106 +184,26 @@ BackgroundGradient 10s ease infinite;
     </div>
 
     <div id="chat" class="secao">
-
-
-
         <div class="header-perfil" style="max-width: 1000px;">
-
-
-
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-
-
-<h2>💬 Mensagens</h2>
-
-
-               
-<button onclick="abrirModalGrupo()" style="width:auto; padding:5px 15px; background:gold; color:black">+ NOVO GRUPO</button>
-
-
-
+                <h2>💬 Mensagens</h2>
+                <button onclick="abrirModalGrupo()" style="width:auto; padding:5px 15px; background:gold; color:black">+ NOVO GRUPO</button>
             </div>
-
-
-
-
-
-
-
-   <div class="chat-container">
-
-
-
-   <div class="lista-contatos" id="chat-usuarios"></div>
-
-
-
-
-   <div class="janela-conversa">
-
-
-
-   
-<div id="chat-status" style="padding: 10px; 
-
-background: rgba(0,0,0,0.3); 
-
-
-border-bottom: 1px solid gold; 
-
-font-size: 0.8em; 
-
-
-display:flex; 
-
-
-justify-content:space-between">
-
-
-<span id="txt-status">Selecione uma conversa (Somente amigos mútuos)</span>
-
-
-<div id="acoes-chat" style="display:none">
-
-
-
-<button id="btn-del-gp" onclick="deletarGrupo()" style="background:red; width:auto; padding:2px 8px; font-size:10px; display:none">EXCLUIR GRUPO</button>
-
-
-
-<button onclick="bloquearContato()" style="background:#444; width:auto; padding:2px 8px; font-size:10px">BLOQUEAR</button>
-
-
-
-
+            <div class="chat-container">
+                <div class="lista-contatos" id="chat-usuarios"></div>
+                <div class="janela-conversa">
+                    <div id="chat-status" style="padding:10px; background:rgba(0,0,0,0.3); border-bottom:1px solid gold; font-size:0.8em; display:flex; justify-content:space-between">
+                        <span id="txt-status">Selecione uma conversa</span>
+                        <div id="acoes-chat" style="display:none">
+                            <button id="btn-del-gp" onclick="deletarGrupo()" style="background:red; width:auto; padding:2px 8px; font-size:10px; display:none">EXCLUIR</button>
+                            <button onclick="bloquearContato()" style="background:#444; width:auto; padding:2px 8px; font-size:10px">BLOQUEAR</button>
                         </div>
                     </div>
-
-
-
-
- <div id="mensagens-corpo"></div>
-
-
-
- <div id="chat-controles" style="display:none; padding: 10px; background: rgba(0,0,0,0.4);">
-
-
-<div style="display: flex; gap: 10px;">
-
-
-
-<input type="text" id="msg-input" placeholder="Sua mensagem..." style="margin:0;">
-                            
-
-
-
-<button onclick="enviarMensagem()" style="width: 80px;">Enviar</button>
-
-
-
-
-
+                    <div id="mensagens-corpo"></div>
+                    <div id="chat-controles" style="display:none; padding:10px; background:rgba(0,0,0,0.4);">
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" id="msg-input" placeholder="Sua mensagem..." style="margin:0;">
+                            <button onclick="enviarMensagem()" style="width:80px;">Enviar</button>
                         </div>
                     </div>
                 </div>
@@ -367,68 +211,15 @@ justify-content:space-between">
         </div>
     </div>
 
-    <div id="modal-grupo" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#1a1a1a; padding:20px; border:2px solid gold; border-radius:10px; z-index:3000; width:300px; text-align:center">
-
-
-
-        <h3>Novo Grupo</h3>
-
-
-
-
-
-        <input type="text" id="nome-grupo-novo" placeholder="Nome do Grupo">
-
-
-
-
-
-        <div id="lista-membros-gp" style="text-align:left; max-height:150px; overflow-y:auto; margin:10px 0; font-size:12px"></div>
-        <button onclick="confirmarGrupo()">CRIAR</button>
-
-
-
-        <button onclick="toggleElement('modal-grupo')" style="background:#444; margin-top:5px">CANCELAR</button>
-    </div>
-
     <div id="multiversy" class="secao">
-
-
-
-
         <div class="header-perfil">
-
-
-
             <h2>🌌 Multiversy 3D</h2>
-
-
-
-            <div class="info-card" style="text-align: center; padding: 40px;">
-
-
-
-<p>Atenção: Estamos em bing bang</p>
-
-
-
-<button onclick="abrirJanelaMultiverso()" style="background: gold;
- color: black;
- width: auto;
- padding: 15px 30px;
- margin-top: 20px;
- font-size: 16px;">Multiversy</button>
-
-
-
-
+            <div class="info-card" style="text-align: center; padding: 40px; background: rgba(255, 215, 0, 0.1); border: 1px solid gold; border-radius: 10px;">
+                <p>Atenção: Estamos em bing bang</p>
+                <button onclick="abrirJanelaMultiverso()" style="background: gold; color: black; width: auto; padding: 15px 30px; margin-top: 20px; font-size: 16px;">Entrar no Multiverso</button>
             </div>
         </div>
     </div>
-
-
-
-
 
     <div id="exchange" class="secao">
         <div class="header-perfil" style="max-width: 95%; width: 1100px;">
@@ -440,41 +231,6 @@ justify-content:space-between">
     </div>
 
     <div id="home" class="secao"><div class="header-perfil"><h1>Mural da Comunidade</h1><div id="feed-global" class="galeria-fotos"></div></div></div>
-
-
-
-
-
-    <div id="quadrinhos" class="secao"><div class="header-perfil"><h2>📚 Quadrinhos</h2><div id="feed-quadrinhos" class="galeria-fotos"></div></div></div>
-
-    
-
-
-
-
-<div id="livros" class="secao">
-        <div class="header-perfil" style="max-width: 900px; padding: 0; overflow: hidden; border: 2px solid gold;">
-            
-
-
-
-<div style="background-color: #f2e8d5; background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); color: #3b352a; font-family: 'Georgia', serif; padding: 30px; text-align: left;">
-                
-
-
-
-<div style="background: rgba(255, 255, 255, 0.3); padding: 25px; border-radius: 8px; border: 1px solid #c9bca3; margin-bottom: 40px;">
-                    <button onclick="salvarObra()" style="background: #5d5444; color: white; border-radius: 0; font-family: 'Georgia', serif;">Biblioteca Fechada</button>
-
-
-
-
-
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="impressao" class="secao"><div class="header-perfil"><h2>⚙️ Impressão 3D</h2><div id="feed-impressao" class="galeria-fotos"></div></div></div>
 
     <div id="perfil" class="secao">
@@ -490,15 +246,22 @@ justify-content:space-between">
                 <button onclick="toggleElement('edit-perfil')" style="width: auto; background: #555;">⚙️ Editar</button>
                 <button onclick="toggleElement('postar-foto')" style="width: auto; background: gold; color: black;">📸 Postar</button>
             </div>
-            
             <div id="edit-perfil" style="display:none; margin-top:20px;"><input type="file" id="input-foto"><textarea id="input-bio"></textarea><button onclick="salvarPerfil()">Salvar</button></div>
             <div id="postar-foto" style="display:none; margin-top:20px;">
-                <select id="post-cat"><option value="mural">Mural</option><option value="quadrinhos">Quadrinhos</option><option value="livros">Livros</option><option value="impressao">Impressão 3D</option></select>
+                <select id="post-cat"><option value="mural">Mural</option><option value="impressao">Impressão 3D</option></select>
                 <input type="file" id="input-post"><input type="text" id="post-desc" placeholder="Descrição"><button onclick="postarFoto()">Publicar</button>
             </div>
             <div class="galeria-fotos" id="minha-galeria"></div>
-            <button onclick="deletarConta()" class="btn-perigo">🗑️ Excluir Conta</button>
+            <button onclick="deletarConta()" style="background:#ff4757; margin-top:20px; font-size:0.8em; width:auto; padding:8px 15px;">🗑️ Excluir Conta</button>
         </div>
+    </div>
+
+    <div id="modal-grupo" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#1a1a1a; padding:20px; border:2px solid gold; border-radius:10px; z-index:3000; width:300px; text-align:center">
+        <h3>Novo Grupo</h3>
+        <input type="text" id="nome-grupo-novo" placeholder="Nome do Grupo">
+        <div id="lista-membros-gp" style="text-align:left; max-height:150px; overflow-y:auto; margin:10px 0; font-size:12px"></div>
+        <button onclick="confirmarGrupo()">CRIAR</button>
+        <button onclick="toggleElement('modal-grupo')" style="background:#444; margin-top:5px">CANCELAR</button>
     </div>
 
     <script>
@@ -511,22 +274,46 @@ justify-content:space-between">
             const salvo = localStorage.getItem('sessao_ativa');
             if (salvo) {
                 const conta = JSON.parse(localStorage.getItem(salvo));
-                if (conta) loginSucesso(conta);
+                if (conta) {
+                    loginSucesso(conta);
+                    
+                    // Lógica para retornar direto ao perfil se vier das páginas externas
+                    const origin = document.referrer;
+                    if (origin.includes('quadrinhos.html') || origin.includes('livros.html') || origin.includes('multiverso.html')) {
+                        mostrar('perfil');
+                    }
+                }
             }
         };
 
         function mostrar(idSecao) {
             if (!logado && idSecao !== 'login') return;
+
+            // REDIRECIONAMENTO PARA PÁGINAS EXTERNAS
+            if (idSecao === 'quadrinhos') {
+                window.location.href = 'quadrinhos.html';
+                return;
+            }
+            if (idSecao === 'livros') {
+                window.location.href = 'livros.html';
+                return;
+            }
+
             document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativa'));
-            document.getElementById(idSecao).classList.add('ativa');
+            const target = document.getElementById(idSecao);
+            if(target) target.classList.add('ativa');
             
             if(idSecao === 'perfil') carregarPerfil();
             if(idSecao === 'home') carregarFeed('feed-global', 'todas');
             if(idSecao === 'chat') carregarListaChat();
-            
-            if(['quadrinhos','livros','impressao'].includes(idSecao)) carregarFeed('feed-'+idSecao, idSecao);
+            if(idSecao === 'impressao') carregarFeed('feed-impressao', 'impressao');
         }
 
+        function abrirJanelaMultiverso() {
+            window.location.href = 'multiverso.html';
+        }
+
+        // --- FUNÇÕES DE NÚCLEO ---
         function alternarTela(t) { 
             document.getElementById('area-login').style.display = t === 'login' ? 'block' : 'none';
             document.getElementById('area-cadastro').style.display = t === 'cadastro' ? 'block' : 'none';
@@ -555,182 +342,7 @@ justify-content:space-between">
 
         function logout() { localStorage.removeItem('sessao_ativa'); location.reload(); }
 
-        function seguir(email) {
-            if(email === usuarioAtual) return;
-            // Melhoria: Fallback para evitar erro se o usuário não for encontrado
-            let a = JSON.parse(localStorage.getItem(email)) || {};
-            let eu = JSON.parse(localStorage.getItem(usuarioAtual)) || {};
-            if(!eu.seguindo_lista) eu.seguindo_lista = [];
-            
-            if(!eu.seguindo_lista.includes(email)) {
-                eu.seguindo_lista.push(email); eu.seguindo++; a.seguidores++;
-            } else {
-                eu.seguindo_lista = eu.seguindo_lista.filter(e => e !== email); eu.seguindo--; a.seguidores--;
-            }
-            localStorage.setItem(email, JSON.stringify(a)); 
-            localStorage.setItem(usuarioAtual, JSON.stringify(eu));
-            
-            const secaoAtiva = document.querySelector('.secao.ativa').id;
-            mostrar(secaoAtiva);
-        }
-
-        function carregarListaChat() {
-            const lista = document.getElementById('chat-usuarios');
-            lista.innerHTML = "";
-            let eu = JSON.parse(localStorage.getItem(usuarioAtual)) || { seguindo_lista: [], bloqueados: [] };
-
-            for (let i = 0; i < localStorage.length; i++) {
-                const k = localStorage.key(i);
-                if (k.startsWith('gp_')) {
-                    const gp = JSON.parse(localStorage.getItem(k));
-                    if (gp && gp.membros && gp.membros.includes(usuarioAtual)) {
-                        const d = document.createElement('div');
-                        d.className = 'contato-item';
-                        d.innerHTML = `<span style="color:gold; font-size:10px">GRUPO</span><br><strong>${gp.nome}</strong>`;
-                        d.onclick = () => abrirConversa(k, 'grupo');
-                        lista.appendChild(d);
-                    }
-                }
-            }
-
-            for (let i = 0; i < localStorage.length; i++) {
-                const k = localStorage.key(i);
-                if (k === 'sessao_ativa' || !k.includes('@') || k === usuarioAtual || k.startsWith('gp_') || k.includes('_chat_')) continue;
-                
-                const alvo = JSON.parse(localStorage.getItem(k)) || {};
-                const euSigo = eu.seguindo_lista && eu.seguindo_lista.includes(k);
-                const eleMeSegue = alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual);
-                const bloqueado = (eu.bloqueados && eu.bloqueados.includes(k)) || (alvo.bloqueados && alvo.bloqueados.includes(usuarioAtual));
-
-                if (euSigo && eleMeSegue && !bloqueado) {
-                    const d = document.createElement('div');
-                    d.className = 'contato-item';
-                    d.innerHTML = `<strong>${alvo.nome}</strong><br><small style="color:gold">Amigo</small>`;
-                    d.onclick = () => abrirConversa(k, 'privado');
-                    lista.appendChild(d);
-                }
-            }
-        }
-
-        function abrirConversa(id, tipo) {
-            contatoAtivo = id;
-            chatTipo = tipo;
-            const dados = JSON.parse(localStorage.getItem(id)) || { nome: "Usuário" };
-            document.getElementById('txt-status').innerText = tipo === 'grupo' ? dados.nome : dados.nome;
-            document.getElementById('chat-controles').style.display = 'block';
-            document.getElementById('acoes-chat').style.display = 'flex';
-            document.getElementById('btn-del-gp').style.display = (tipo === 'grupo' && dados.admin === usuarioAtual) ? 'block' : 'none';
-            renderizarMensagens();
-        }
-
-        function enviarMensagem() {
-            const texto = document.getElementById('msg-input').value;
-            if(!texto || !contatoAtivo) return;
-            const eu = JSON.parse(localStorage.getItem(usuarioAtual)) || { nome: "Eu" };
-            const msg = { r: usuarioAtual, n: eu.nome, t: texto, id: Date.now() };
-
-            if(chatTipo === 'grupo') {
-                let gp = JSON.parse(localStorage.getItem(contatoAtivo));
-                gp.mensagens.push(msg);
-                localStorage.setItem(contatoAtivo, JSON.stringify(gp));
-            } else {
-                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
-                let historico = JSON.parse(localStorage.getItem(chatKey)) || [];
-                historico.push(msg);
-                localStorage.setItem(chatKey, JSON.stringify(historico));
-            }
-            document.getElementById('msg-input').value = "";
-            renderizarMensagens();
-        }
-
-        function renderizarMensagens() {
-            const corpo = document.getElementById('mensagens-corpo');
-            corpo.innerHTML = "";
-            let historico = [];
-            if(chatTipo === 'grupo') {
-                const gpData = JSON.parse(localStorage.getItem(contatoAtivo));
-                historico = gpData ? gpData.mensagens : [];
-            } else {
-                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
-                historico = JSON.parse(localStorage.getItem(chatKey)) || [];
-            }
-
-            historico.forEach(m => {
-                const div = document.createElement('div');
-                div.className = `msg-balao ${m.r === usuarioAtual ? 'msg-enviada' : 'msg-recebida'}`;
-                div.title = "Clique para apagar";
-                div.onclick = () => apagarMensagem(m.id);
-                const autor = (chatTipo === 'grupo' && m.r !== usuarioAtual) ? `<small style="color:gold;display:block">${m.n}</small>` : '';
-                div.innerHTML = autor + m.t;
-                corpo.appendChild(div);
-            });
-            // Melhoria: Scroll suave para a última mensagem
-            corpo.scrollTo({ top: corpo.scrollHeight, behavior: 'smooth' });
-        }
-
-        function apagarMensagem(msgId) {
-            if(!confirm("Apagar esta mensagem?")) return;
-            if(chatTipo === 'grupo') {
-                let gp = JSON.parse(localStorage.getItem(contatoAtivo));
-                gp.mensagens = gp.mensagens.filter(m => m.id !== msgId);
-                localStorage.setItem(contatoAtivo, JSON.stringify(gp));
-            } else {
-                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
-                let hist = JSON.parse(localStorage.getItem(chatKey)) || [];
-                localStorage.setItem(chatKey, JSON.stringify(hist.filter(m => m.id !== msgId)));
-            }
-            renderizarMensagens();
-        }
-
-        function abrirModalGrupo() {
-            toggleElement('modal-grupo');
-            const lista = document.getElementById('lista-membros-gp');
-            lista.innerHTML = "";
-            let eu = JSON.parse(localStorage.getItem(usuarioAtual)) || { seguindo_lista: [] };
-            for (let i = 0; i < localStorage.length; i++) {
-                const k = localStorage.key(i);
-                if (k.includes('@') && k !== usuarioAtual && !k.startsWith('gp_')) {
-                    const alvo = JSON.parse(localStorage.getItem(k)) || {};
-                    if(eu.seguindo_lista && eu.seguindo_lista.includes(k) && alvo.seguindo_lista && alvo.seguindo_lista.includes(usuarioAtual)) {
-                        lista.innerHTML += `<label><input type="checkbox" class="check-membro" value="${k}"> ${alvo.nome}</label><br>`;
-                    }
-                }
-            }
-        }
-
-        function confirmarGrupo() {
-            const nome = document.getElementById('nome-grupo-novo').value;
-            const selecionados = Array.from(document.querySelectorAll('.check-membro:checked')).map(cb => cb.value);
-            if(!nome || selecionados.length === 0) return alert("Erro nos dados!");
-            const idGp = 'gp_' + Date.now();
-            localStorage.setItem(idGp, JSON.stringify({ nome: nome, admin: usuarioAtual, membros: [usuarioAtual, ...selecionados], mensagens: [] }));
-            toggleElement('modal-grupo'); carregarListaChat();
-        }
-
-        function deletarGrupo() {
-            if(confirm("Excluir grupo?")) { localStorage.removeItem(contatoAtivo); contatoAtivo = null; carregarListaChat(); }
-        }
-
-        function bloquearContato() {
-            if(confirm("Bloquear contato?")) {
-                let eu = JSON.parse(localStorage.getItem(usuarioAtual)) || {};
-                if(!eu.bloqueados) eu.bloqueados = [];
-                eu.bloqueados.push(contatoAtivo);
-                localStorage.setItem(usuarioAtual, JSON.stringify(eu));
-                contatoAtivo = null; carregarListaChat();
-            }
-        }
-
-        function carregarFeed(containerId, catFiltro) {
-            const f = document.getElementById(containerId); if(!f) return; f.innerHTML = ""; let posts = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const k = localStorage.key(i); if (k === 'sessao_ativa' || !k.includes('@') || k.includes('_chat_') || k.startsWith('gp_')) continue;
-                const c = JSON.parse(localStorage.getItem(k)) || { posts: [] };
-                if (c.posts) c.posts.forEach(p => { if(catFiltro === 'todas' || p.categoria === catFiltro) posts.push({ ...p, autorNome: c.nome, autorEmail: c.email }); });
-            }
-            posts.sort((a, b) => b.id - a.id).forEach(p => f.appendChild(criarCardPost(p, p.autorEmail === usuarioAtual)));
-        }
-
+        // --- FUNÇÕES DE PERFIL E FEED ---
         function carregarPerfil() {
             const c = JSON.parse(localStorage.getItem(usuarioAtual)) || { nome: "Usuário", posts: [] };
             document.getElementById('display-nome').innerText = c.nome;
@@ -742,17 +354,25 @@ justify-content:space-between">
             if(c.posts) c.posts.forEach(p => g.appendChild(criarCardPost({...p, autorNome: c.nome, autorEmail: c.email}, true)));
         }
 
+        function carregarFeed(containerId, catFiltro) {
+            const f = document.getElementById(containerId); if(!f) return; f.innerHTML = ""; let posts = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const k = localStorage.key(i); if (!k.includes('@') || k.includes('_chat_') || k.startsWith('gp_')) continue;
+                const c = JSON.parse(localStorage.getItem(k));
+                if (c && c.posts) c.posts.forEach(p => { if(catFiltro === 'todas' || p.categoria === catFiltro) posts.push({ ...p, autorNome: c.nome, autorEmail: c.email }); });
+            }
+            posts.sort((a, b) => b.id - a.id).forEach(p => f.appendChild(criarCardPost(p, p.autorEmail === usuarioAtual)));
+        }
+
         function criarCardPost(p, eMeu) {
             const eu = JSON.parse(localStorage.getItem(usuarioAtual)) || { seguindo_lista: [] };
             const jaSigo = eu.seguindo_lista && eu.seguindo_lista.includes(p.autorEmail);
-
             const d = document.createElement('div'); d.className = 'post-card';
             d.innerHTML = `<span class="post-categoria">${p.categoria}</span><img src="${p.imagem}"><div class="post-info">
                 <p><strong>${p.autorNome}</strong> ${p.descricao}</p>
                 <div class="btn-group">
                     <button class="btn-interagir" onclick="interagir('${p.autorEmail}', ${p.id}, 'like')">❤️ ${p.likes}</button>
                     ${!eMeu ? `<button class="btn-interagir" style="background:${jaSigo?'#444':'gold'}; color:${jaSigo?'white':'black'}" onclick="seguir('${p.autorEmail}')">${jaSigo?'✅ Seguindo':'👤 Seguir'}</button>` : ''}
-                    ${eMeu ? `<button class="btn-interagir" style="background:#e74c3c" onclick="removerPost(${p.id})">🗑️</button>` : ''}
                 </div>
             </div>`;
             return d;
@@ -763,7 +383,7 @@ justify-content:space-between">
             if(!f) return alert("Selecione!");
             const r = new FileReader(); r.onload = (e) => {
                 let c = JSON.parse(localStorage.getItem(usuarioAtual)) || { posts: [] };
-                c.posts.unshift({ id: Date.now(), imagem: e.target.result, descricao: document.getElementById('post-desc').value, categoria: cat, likes: 0, comentarios: [] });
+                c.posts.unshift({ id: Date.now(), imagem: e.target.result, descricao: document.getElementById('post-desc').value, categoria: cat, likes: 0 });
                 localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil(); toggleElement('postar-foto');
             }; r.readAsDataURL(f);
         }
@@ -777,17 +397,96 @@ justify-content:space-between">
             toggleElement('edit-perfil');
         }
 
-        function removerPost(id) {
-            let c = JSON.parse(localStorage.getItem(usuarioAtual)) || { posts: [] }; 
-            c.posts = c.posts.filter(p => p.id !== id);
-            localStorage.setItem(usuarioAtual, JSON.stringify(c)); carregarPerfil();
+        function seguir(email) {
+            if(email === usuarioAtual) return;
+            let a = JSON.parse(localStorage.getItem(email)), eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            if(!eu.seguindo_lista.includes(email)) { eu.seguindo_lista.push(email); eu.seguindo++; a.seguidores++; }
+            else { eu.seguindo_lista = eu.seguindo_lista.filter(e => e !== email); eu.seguindo--; a.seguidores--; }
+            localStorage.setItem(email, JSON.stringify(a)); localStorage.setItem(usuarioAtual, JSON.stringify(eu));
+            mostrar(document.querySelector('.secao.ativa').id);
         }
 
         function interagir(email, id, acao) {
-            let c = JSON.parse(localStorage.getItem(email)) || { posts: [] }; 
-            const p = c.posts.find(x => x.id === id);
+            let c = JSON.parse(localStorage.getItem(email)); const p = c.posts.find(x => x.id === id);
             if(p && acao === 'like') p.likes++;
             localStorage.setItem(email, JSON.stringify(c)); carregarFeed('feed-global', 'todas');
+        }
+
+        // --- SISTEMA DE CHAT ---
+        function carregarListaChat() {
+            const lista = document.getElementById('chat-usuarios'); lista.innerHTML = "";
+            let eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            for (let i = 0; i < localStorage.length; i++) {
+                const k = localStorage.key(i);
+                if (k.startsWith('gp_')) {
+                    const gp = JSON.parse(localStorage.getItem(k));
+                    if (gp.membros.includes(usuarioAtual)) {
+                        const d = document.createElement('div'); d.className = 'contato-item';
+                        d.innerHTML = `<span style="color:gold; font-size:10px">GRUPO</span><br><strong>${gp.nome}</strong>`;
+                        d.onclick = () => abrirConversa(k, 'grupo'); lista.appendChild(d);
+                    }
+                } else if (k.includes('@') && k !== usuarioAtual) {
+                    const alvo = JSON.parse(localStorage.getItem(k));
+                    if (eu.seguindo_lista.includes(k) && alvo.seguindo_lista.includes(usuarioAtual)) {
+                        const d = document.createElement('div'); d.className = 'contato-item';
+                        d.innerHTML = `<strong>${alvo.nome}</strong><br><small style="color:gold">Amigo</small>`;
+                        d.onclick = () => abrirConversa(k, 'privado'); lista.appendChild(d);
+                    }
+                }
+            }
+        }
+
+        function abrirConversa(id, tipo) {
+            contatoAtivo = id; chatTipo = tipo;
+            const dados = JSON.parse(localStorage.getItem(id)) || { nome: "Usuário" };
+            document.getElementById('txt-status').innerText = dados.nome;
+            document.getElementById('chat-controles').style.display = 'block';
+            document.getElementById('acoes-chat').style.display = 'flex';
+            document.getElementById('btn-del-gp').style.display = (tipo === 'grupo' && dados.admin === usuarioAtual) ? 'block' : 'none';
+            renderizarMensagens();
+        }
+
+        function enviarMensagem() {
+            const texto = document.getElementById('msg-input').value; if(!texto) return;
+            const eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            const msg = { r: usuarioAtual, n: eu.nome, t: texto, id: Date.now() };
+            if(chatTipo === 'grupo') {
+                let gp = JSON.parse(localStorage.getItem(contatoAtivo)); gp.mensagens.push(msg); localStorage.setItem(contatoAtivo, JSON.stringify(gp));
+            } else {
+                const chatKey = [usuarioAtual, contatoAtivo].sort().join('_chat_');
+                let hist = JSON.parse(localStorage.getItem(chatKey)) || []; hist.push(msg); localStorage.setItem(chatKey, JSON.stringify(hist));
+            }
+            document.getElementById('msg-input').value = ""; renderizarMensagens();
+        }
+
+        function renderizarMensagens() {
+            const corpo = document.getElementById('mensagens-corpo'); corpo.innerHTML = "";
+            let hist = [];
+            if(chatTipo === 'grupo') hist = JSON.parse(localStorage.getItem(contatoAtivo)).mensagens;
+            else hist = JSON.parse(localStorage.getItem([usuarioAtual, contatoAtivo].sort().join('_chat_'))) || [];
+            hist.forEach(m => {
+                const div = document.createElement('div'); div.className = `msg-balao ${m.r === usuarioAtual ? 'msg-enviada' : 'msg-recebida'}`;
+                div.innerHTML = (chatTipo === 'grupo' && m.r !== usuarioAtual ? `<small style="color:gold;display:block">${m.n}</small>` : '') + m.t;
+                corpo.appendChild(div);
+            });
+            corpo.scrollTop = corpo.scrollHeight;
+        }
+
+        function abrirModalGrupo() {
+            toggleElement('modal-grupo'); const lista = document.getElementById('lista-membros-gp'); lista.innerHTML = "";
+            let eu = JSON.parse(localStorage.getItem(usuarioAtual));
+            eu.seguindo_lista.forEach(k => {
+                const alvo = JSON.parse(localStorage.getItem(k));
+                if(alvo.seguindo_lista.includes(usuarioAtual)) lista.innerHTML += `<label><input type="checkbox" class="check-membro" value="${k}"> ${alvo.nome}</label><br>`;
+            });
+        }
+
+        function confirmarGrupo() {
+            const nome = document.getElementById('nome-grupo-novo').value, sels = Array.from(document.querySelectorAll('.check-membro:checked')).map(cb => cb.value);
+            if(!nome || sels.length === 0) return alert("Erro!");
+            const idGp = 'gp_' + Date.now();
+            localStorage.setItem(idGp, JSON.stringify({ nome: nome, admin: usuarioAtual, membros: [usuarioAtual, ...sels], mensagens: [] }));
+            toggleElement('modal-grupo'); carregarListaChat();
         }
 
         function deletarConta() { if(confirm("Certeza?")) { localStorage.removeItem(usuarioAtual); logout(); } }
