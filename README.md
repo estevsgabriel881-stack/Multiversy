@@ -286,7 +286,7 @@
 
 
             <h1 style="margin-top: 60px;">📚 Galeria de Quadrinhos</h1>
-            <p>O CSS original foi recolhido para dar lugar a este visual de papel.</p>
+            <p>Ainda estamos imaginando!</p>
 
 
 
